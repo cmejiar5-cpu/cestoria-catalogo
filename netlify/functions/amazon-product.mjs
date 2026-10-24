@@ -3,7 +3,7 @@ const reply = (statusCode, data) => new Response(JSON.stringify(data), {
   headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
 });
 
-const isAmazonHost = host => /(^|\\.)amazon\\.(com|co\\.uk|ca|es|com\\.mx|de|fr|it|co\\.jp|in|com\\.au|com\\.br)$/i.test(host);
+const isAmazonHost = host => /(^|\.)amazon\.(com|co\.uk|ca|es|com\.mx|de|fr|it|co\.jp|in|com\.au|com\.br)$/i.test(host);
 const isShortHost = host => ["amzn.to", "link.amazon"].includes(host.toLowerCase());
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36";
 
@@ -15,8 +15,8 @@ function decode(value) {
     .replace(/&#39;|&apos;/gi, "'")
     .replace(/&lt;/gi, "<")
     .replace(/&gt;/gi, ">")
-    .replace(/&#(\\d+);/g, (_, n) => String.fromCharCode(Number(n)))
-    .replace(/&#x([\\da-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)));
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&#x([\da-f]+);/gi, (_, n) => String.fromCharCode(parseInt(n, 16)));
 }
 function attr(tag, name) {
   const pattern = new RegExp(name + "\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)'|([^\\s>]+))", "i");
@@ -24,10 +24,10 @@ function attr(tag, name) {
   return match ? decode(match[1] || match[2] || match[3] || "").trim() : "";
 }
 function cleanText(value) {
-  return decode(String(value || "").replace(/<[^>]*>/g, " ")).replace(/\\s+/g, " ").trim();
+  return decode(String(value || "").replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 }
 function meta(html, property) {
-  const tags = html.match(/<meta\\b[^>]*>/gi) || [];
+  const tags = html.match(/<meta\b[^>]*>/gi) || [];
   for (const tag of tags) {
     const key = attr(tag, "property") || attr(tag, "name");
     if (key.toLowerCase() === property.toLowerCase()) {
@@ -39,8 +39,8 @@ function meta(html, property) {
 }
 function visibleText(html) {
   return cleanText(html
-    .replace(/<(script|style|noscript|svg|head|nav|footer)[\\s\\S]*?<\\/\\1>/gi, " ")
-    .replace(/<br\\s*\\/?\\s*>|<\\/(p|div|li|h[1-6]|tr)>/gi, " ")
+    .replace(/<(script|style|noscript|svg|head|nav|footer)[\s\S]*?<\/\1>/gi, " ")
+    .replace(/<br\s*\/?\s*>|<\/(p|div|li|h[1-6]|tr)>/gi, " ")
     .replace(/<[^>]+>/g, " "));
 }
 async function getAllowedPage(input) {
@@ -99,7 +99,7 @@ export default async function handler(request) {
 
   try {
     const page = await getAllowedPage(body.url);
-    const titleTag = (page.html.match(/<title\\b[^>]*>([\\s\\S]*?)<\\/title>/i) || [])[1] || "";
+    const titleTag = (page.html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || "";
     const title = meta(page.html, "og:title") ||
       meta(page.html, "twitter:title") ||
       meta(page.html, "title") ||
