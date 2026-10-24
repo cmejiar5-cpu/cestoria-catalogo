@@ -1,0 +1,323 @@
+{
+  "store_name": "Cestoria",
+  "username": "Cestoriashop",
+  "avatar": "https://ugc.production.linktr.ee/ddf59fa5-0f1d-44ca-a3ae-e6c5c851379e_1000818504.png",
+  "bio": "Cestoria nació en casa, de la mano de Antonio y Alejandra, padres de un niño autista. ",
+  "socials": [
+    {
+      "name": "Instagram",
+      "url": "https://instagram.com/cestoria",
+      "icon": "instagram"
+    },
+    {
+      "name": "WhatsApp",
+      "url": "https://wa.me/573152424445",
+      "icon": "whatsapp"
+    },
+    {
+      "name": "Web Oficial",
+      "url": "https://cestoria.shop",
+      "icon": "globe"
+    }
+  ],
+  "categories": [
+    {
+      "id": "602379922",
+      "name": "Construcción y Stem",
+      "items": [
+        {
+          "id": "604713012",
+          "title": "PREPHY - Juguetes de tren de dominó para niños, juego creativo de apilamiento automático para niños de 3 años en adelante, juguete Montessori para niños de 4 a 6 años, regalos de cumpleaños de Navidad autistas de verano, 5, 6, niños de 4 a 8 a",
+          "original_title": "Amazon.com: PREPHY - Juguetes de tren de dominó para niños, juego creativo de apilamiento automático para niños de 3 años en adelante, juguete Montessori para niños de 4 a 6 años, regalos de cumpleaños de Navidad autistas de verano, 5, 6, niños de 4 a 8 a",
+          "url": "https://amzn.to/4yd49DS",
+          "image": "https://ugc.production.linktr.ee/b2e6cef4-16c1-4624-bee5-424fdb9e5a22_71fJJPjXDEL.-AC-SX425-.jpeg",
+          "type": "CLASSIC"
+        },
+        {
+          "id": "603392334",
+          "title": "www.amazon.com",
+          "original_title": "www.amazon.com",
+          "url": "https://amzn.to/4dQlLxW",
+          "image": "https://ugc.production.linktr.ee/2d946fca-f289-4777-b12e-2109deca0a34_Juego-de-nmeros-en-la-habitacin-infantil.png",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "603166958",
+          "title": "NIPLOOOW Kids Boys Construction Truck Vehicle Toy Set with Play Mat and Die-Cast Toy Car, Transport Carrier Truck for Kids 3-5, Birthday Gifts Toys for 3-8 Year Old Boys : Toys & Games",
+          "original_title": "Amazon.com: NIPLOOOW Kids Boys Construction Truck Vehicle Toy Set with Play Mat and Die-Cast Toy Car, Transport Carrier Truck for Kids 3-5, Birthday Gifts Toys for 3-8 Year Old Boys : Toys & Games",
+          "url": "https://amzn.to/4yoJZrj",
+          "image": "https://ugc.production.linktr.ee/ea1d1a9e-7bd2-4c7d-a6a3-695ef69f8451_81xY-CEVtpL.-AC-SY300-SX300-QL70-FMwebp-.webp",
+          "type": "AMAZON_PRODUCT"
+        }
+      ]
+    },
+    {
+      "id": "602379705",
+      "name": "Arte y Creatividad",
+      "items": [
+        {
+          "id": "606086808",
+          "title": "LEGO Adornos de muñeco de nieve 40812 | Manualidades de Navidad, juguetes de construcción, niñas y niños, a partir de 6 años, decoración de árbol de Navidad con : Juguetes y Juegos",
+          "original_title": "Amazon.com: LEGO Adornos de muñeco de nieve 40812 | Manualidades de Navidad, juguetes de construcción, niñas y niños, a partir de 6 años, decoración de árbol de Navidad con : Juguetes y Juegos",
+          "url": "https://amzn.to/4hI8gCY",
+          "image": "https://ugc.production.linktr.ee/2f56951f-8cd3-471e-8b02-5f13775f7225_71mUU78SAJL.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "605709001",
+          "title": "Crayola Color Wonder - Juego de recambio de marcadores (20 unidades), marcadores de línea ancha sin desorden para niños pequeños, colorantes sin desorden para niños, regalos para niños pequeños : Juguetes y Juegos",
+          "original_title": "Amazon.com: Crayola Color Wonder - Juego de recambio de marcadores (20 unidades), marcadores de línea ancha sin desorden para niños pequeños, colorantes sin desorden para niños, regalos para niños pequeños : Juguetes y Juegos",
+          "url": "https://amzn.to/4hVP7MN",
+          "image": "https://ugc.production.linktr.ee/241ea814-5152-4832-a366-01b33d9134b9_617R3memmML.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604490874",
+          "title": "Spooktacular Creations Disfraz unisex de reno, disfraz con capucha de reno con cola y botines, overol con capucha con cremallera para Halloween y cosplay : Ropa, Zapatos y Joyería",
+          "original_title": "Amazon.com: Spooktacular Creations Disfraz unisex de reno, disfraz con capucha de reno con cola y botines, overol con capucha con cremallera para Halloween y cosplay : Ropa, Zapatos y Joyería",
+          "url": "https://amzn.to/4777fyj",
+          "image": "https://ugc.production.linktr.ee/be715e5e-aea5-4109-8bf3-842751b538bc_71ZMhDXxPSL.-AC-SX679-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "603456461",
+          "title": "Creativity for Kids Mini Garden: Mermaid Terrarium Kit - Mermaid Gifts for Girls, Crafts and Toys, Stocking Stuffers for Kids (Ages 6+) : Toys & Games",
+          "original_title": "Amazon.com: Creativity for Kids Mini Garden: Mermaid Terrarium Kit - Mermaid Gifts for Girls, Crafts and Toys, Stocking Stuffers for Kids (Ages 6+) : Toys & Games",
+          "url": "https://amzn.to/3TxXhTq",
+          "image": "https://ugc.production.linktr.ee/f0bc88b3-5cec-4ecd-b977-439c1aeef12b_91PHPAwH8uL.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "603393876",
+          "title": "cudinham Mini Sticker Printer, X6 Print Pod with 10 Rolls Thermal Paper | Bluetooth Pocket Printer Sticker Maker for Phone, Impresora Portátil for Gifts, DIY, Journaling Supplies, Photos (White) : Office Products",
+          "original_title": "Amazon.com: cudinham Mini Sticker Printer, X6 Print Pod with 10 Rolls Thermal Paper | Bluetooth Pocket Printer Sticker Maker for Phone, Impresora Portátil for Gifts, DIY, Journaling Supplies, Photos (White) : Office Products",
+          "url": "https://amzn.to/3THWn6C",
+          "image": "https://ugc.production.linktr.ee/8345ff84-c0eb-4ea0-a99e-123463001363_71ASxoLw6GL.-AC-SL1500-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        }
+      ]
+    },
+    {
+      "id": "602379400",
+      "name": "Salud y Bienestar",
+      "items": [
+        {
+          "id": "604697012",
+          "title": "Guía práctica para la crianza de niños en el espectro autista: Estrategias eficaces de manejo del comportamiento, la comunicación y el procesamiento sensorial en el tea para apoyar el éxito de tu hijo (Edición audio Audible): Christine Pratt,",
+          "original_title": "Amazon.com: Guía práctica para la crianza de niños en el espectro autista: Estrategias eficaces de manejo del comportamiento, la comunicación y el procesamiento sensorial en el tea para apoyar el éxito de tu hijo (Edición audio Audible): Christine Pratt, ",
+          "url": "https://amzn.to/47KZrSS",
+          "image": "https://ugc.production.linktr.ee/2e28340b-a566-42de-8efa-0632a5b7d6f1_81EkUV5cRJL.-AC-UY218-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604322377",
+          "title": "Tensiometro de muñeca mas Oximetro",
+          "original_title": "Tensiometro de muñeca mas Oximetro",
+          "url": "https://cestoria.shop/products/tensiometro-de-muneca-mas-oximetro-ds2901",
+          "image": "https://ugc.production.linktr.ee/93bd9d8d-f8e9-4b73-bb85-76090289c473_product-ea123caa.webp",
+          "type": "CLASSIC"
+        },
+        {
+          "id": "604166765",
+          "title": "Electric Salt and Pepper Grinder Set Automatic Battery Pepper Mill Shakers Adjustable Coarseness Upgraded Larger Capacity with Led Home and Kitchen Appliances White Elephant Gifts for Women Men: Home & Kitchen",
+          "original_title": "Amazon.com: Electric Salt and Pepper Grinder Set Automatic Battery Pepper Mill Shakers Adjustable Coarseness Upgraded Larger Capacity with Led Home and Kitchen Appliances White Elephant Gifts for Women Men: Home & Kitchen",
+          "url": "https://amzn.to/4xVxgLF",
+          "image": "https://ugc.production.linktr.ee/df27f848-0ab5-4f72-80b8-f51fa2533ca2_71NpF4JP7HL.-AC-SY741-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        }
+      ]
+    },
+    {
+      "id": "602379377",
+      "name": "Montessori",
+      "items": [
+        {
+          "id": "606091450",
+          "title": "BLCXTOYZ Montessori Toys for 1 Year Old - 6 Pc Shape Sorter Activity Cube | Toddler Learning Toy, Developmental Skills, 12 Months & Up, 1st Birthday Gift for Toddlers 1-3 : Juguetes y Juegos",
+          "original_title": "Amazon.com: BLCXTOYZ Montessori Toys for 1 Year Old - 6 Pc Shape Sorter Activity Cube | Toddler Learning Toy, Developmental Skills, 12 Months & Up, 1st Birthday Gift for Toddlers 1-3 : Juguetes y Juegos",
+          "url": "https://amzn.to/4yS8E84",
+          "image": "https://ugc.production.linktr.ee/ae527857-6c6a-4fa5-8ec6-9031f67596f6_71J6uUNki2L.-AC-SY550-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "605026214",
+          "title": "Dance Mat Toys with Bluetooth, Electronic Dance Pad for 3-12 Year Old Kids | Music Dance Mat with Bluetooth, Light-up 6-Button, 5 Game Modes, Birthday Toys Gifts for 3 4 5 6 7 8 9 10+ Year Old Girls : Toys & Games",
+          "original_title": "Amazon.com: Dance Mat Toys with Bluetooth, Electronic Dance Pad for 3-12 Year Old Kids | Music Dance Mat with Bluetooth, Light-up 6-Button, 5 Game Modes, Birthday Toys Gifts for 3 4 5 6 7 8 9 10+ Year Old Girls : Toys & Games",
+          "url": "https://amzn.to/4jmsi7n",
+          "image": "https://ugc.production.linktr.ee/7b38a9b5-ad1b-44ba-bab0-87418f7e4317_linktree-cropped-24b0a942-2467-47d4-a2ed-016e1d27bd12.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604716430",
+          "title": "Juguetes Sensoriales Montessori para Bebés de 0-6 6-12 Meses, Mordedor Juguetes de Dentición para Bebés de 0 3 6 9 12 18 Meses, Juguetes de Aprendizaje y Desarrollo para Recién Nacidos e Infantes | 12 Textured Silicone Teething Ball, BPA Free,",
+          "original_title": "Amazon.com: Juguetes Sensoriales Montessori para Bebés de 0-6 6-12 Meses, Mordedor Juguetes de Dentición para Bebés de 0 3 6 9 12 18 Meses, Juguetes de Aprendizaje y Desarrollo para Recién Nacidos e Infantes | 12 Textured Silicone Teething Ball, BPA Free,",
+          "url": "https://amzn.to/4epHDjX",
+          "image": "https://ugc.production.linktr.ee/25ff8cf2-3990-4052-9157-1a40b3e753dd_61wDKHokleL.-SX569-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604715380",
+          "title": "Big Mo's Toys Juguete de temporizador en espiral de movimiento líquido para juegos sensoriales, juguete relajante de burbujas para autismo, TDAH, juguete relajante, juguete sensorial de relajación visual, una pieza (surtido) : Productos de Ofi",
+          "original_title": "Amazon.com: Big Mo's Toys Juguete de temporizador en espiral de movimiento líquido para juegos sensoriales, juguete relajante de burbujas para autismo, TDAH, juguete relajante, juguete sensorial de relajación visual, una pieza (surtido) : Productos de Ofi",
+          "url": "https://amzn.to/4dzrb0l",
+          "image": "https://ugc.production.linktr.ee/d701891a-2ff8-4615-a58a-d2ad07d1acc5_81DuuSRrVxL.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604715076",
+          "title": "Flexible Sensory Fidget Sticks for Kids,6PCS Sensory Fidget Toys for Stress Anxiety Autistic ADHD,Calm Down Travel Airplane Essentials Toys,Stuffers Gifts for Teens Boys Girls : Juguetes y Juegos",
+          "original_title": "Amazon.com: Flexible Sensory Fidget Sticks for Kids,6PCS Sensory Fidget Toys for Stress Anxiety Autistic ADHD,Calm Down Travel Airplane Essentials Toys,Stuffers Gifts for Teens Boys Girls : Juguetes y Juegos",
+          "url": "https://amzn.to/4BeOG9c",
+          "image": "https://ugc.production.linktr.ee/996831c2-b1ef-4e8b-8ee5-cadcdb0581ec_719uqxTlUxL.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604161938",
+          "title": "SaFeli Busy Board, Montessori Toys for Boys, Sensory Board Birthday Gifts - Educational Busy Book, Learning Toys, Preschool Learning Activities and Travel Toys for Airplane Car, Blue : Toys & Games",
+          "original_title": "Amazon.com: SaFeli Busy Board, Montessori Toys for Boys, Sensory Board Birthday Gifts - Educational Busy Book, Learning Toys, Preschool Learning Activities and Travel Toys for Airplane Car, Blue : Toys & Games",
+          "url": "https://amzn.to/4jAfs5g",
+          "image": "https://ugc.production.linktr.ee/79f26d67-a674-4936-9e59-d7c256097289_81QdV1gWSVL.-AC-SL1500-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604147639",
+          "title": "Magnetic Maze 2 in 1 Double Side Color and Number Maze Alphabet Puzzle Board for 3-5 Boys and Girls Kids Montessori Educational Toys (Zoo, One Size) : Toys & Games",
+          "original_title": "Amazon.com: Magnetic Maze 2 in 1 Double Side Color and Number Maze Alphabet Puzzle Board for 3-5 Boys and Girls Kids Montessori Educational Toys (Zoo, One Size) : Toys & Games",
+          "url": "https://amzn.to/4hJM3TR",
+          "image": "https://ugc.production.linktr.ee/1a4d791c-4024-4454-942b-95539f0b57bf_81-g25Ph1lL.-AC-SY300-SX300-QL70-FMwebp-.webp",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604142480",
+          "title": "Airbition Talking Flash Cards for Toddlers Ages 1‑4,224 Words English Blue | Montessori Language Learning Toys with 224 Words, Pocket Speech Therapy Toys, Sensory Learning Kit, Educational Toys for Kids : Toys & Games",
+          "original_title": "Amazon.com : Airbition Talking Flash Cards for Toddlers Ages 1‑4,224 Words English Blue | Montessori Language Learning Toys with 224 Words, Pocket Speech Therapy Toys, Sensory Learning Kit, Educational Toys for Kids : Toys & Games",
+          "url": "https://amzn.to/4rHK9rc",
+          "image": "https://ugc.production.linktr.ee/76d02c2b-451f-446b-8346-fab8c24a8bcb_71MxFkRSqvL.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        }
+      ]
+    },
+    {
+      "id": "602379361",
+      "name": "My collection",
+      "items": [
+        {
+          "id": "603416792",
+          "title": "Grarain - Tabla de actividades para niños pequeños – Juguete educativo Montessori para niños y niñas de 1 a 3 años | Actividad de aprendizaje sensorial apta para viajes | Ideal para niños con autismo : Juguetes y Juegos",
+          "original_title": "Amazon.com: Grarain - Tabla de actividades para niños pequeños – Juguete educativo Montessori para niños y niñas de 1 a 3 años | Actividad de aprendizaje sensorial apta para viajes | Ideal para niños con autismo : Juguetes y Juegos",
+          "url": "https://amzn.to/4rSb7wr",
+          "image": "https://ugc.production.linktr.ee/d06dd516-6248-44eb-905c-132a6359cac7_71YLko6pg6L.-AC-SY300-SX300-QL70-FMwebp-.webp",
+          "type": "AMAZON_PRODUCT"
+        }
+      ]
+    },
+    {
+      "id": "602379268",
+      "name": "Juegos Sensoriales TEA",
+      "items": [
+        {
+          "id": "606089238",
+          "title": "Almohada gigante de bola de masa de Navidad linda felpa lenta reboun | Almohada de felpa de rebote lento para aliviar la ansiedad de adultos con bola de masa masiva para aliviar la ansiedad : Juguetes y Juegos",
+          "original_title": "Amazon.com: Almohada gigante de bola de masa de Navidad linda felpa lenta reboun | Almohada de felpa de rebote lento para aliviar la ansiedad de adultos con bola de masa masiva para aliviar la ansiedad : Juguetes y Juegos",
+          "url": "https://amzn.to/3VOByHx",
+          "image": "https://ugc.production.linktr.ee/004a801e-306e-451b-ba51-8f566c6973ca_71y5pwj0zkL.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "606088246",
+          "title": "Juguete sensorial para ansiedad crujiente con textura ASMR crujiente, juguete para aliviar el estrés, divertido regalo novedoso para niños, adolescentes y adultos, rosa : Juguetes y Juegos",
+          "original_title": "Amazon.com: Juguete sensorial para ansiedad crujiente con textura ASMR crujiente, juguete para aliviar el estrés, divertido regalo novedoso para niños, adolescentes y adultos, rosa : Juguetes y Juegos",
+          "url": "https://amzn.to/4zwb3VL",
+          "image": "https://ugc.production.linktr.ee/8d75418b-5568-448c-ab8b-d3c084af9a6e_61-DrE0he9L.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604713709",
+          "title": "Juguetes sensoriales antiestrés para niños: paquete de 4 juguetes para | Juguetes antiestrés silenciosos para el aula de estudiantes, juguetes sensoriales calmantes para TDAH y autismo : Salud y Hogar",
+          "original_title": "Amazon.com: Juguetes sensoriales antiestrés para niños: paquete de 4 juguetes para | Juguetes antiestrés silenciosos para el aula de estudiantes, juguetes sensoriales calmantes para TDAH y autismo : Salud y Hogar",
+          "url": "https://amzn.to/4B3Oae8",
+          "image": "https://ugc.production.linktr.ee/06b96df2-6577-4464-8abe-a6b819462dfd_81Z-SllOMiL.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604498888",
+          "title": "Bright Autism Almohada Hugger, almohada vibratoria sensorial de doble | Texturas sensoriales duales con vibración y un diseño abrazable, fomenta la comodidad, la conexión y el juego comprometido en : Salud y Hogar",
+          "original_title": "Amazon.com: Bright Autism Almohada Hugger, almohada vibratoria sensorial de doble | Texturas sensoriales duales con vibración y un diseño abrazable, fomenta la comodidad, la conexión y el juego comprometido en : Salud y Hogar",
+          "url": "https://amzn.to/47cKfhj",
+          "image": "https://ugc.production.linktr.ee/ceea5b77-a63c-4bec-9abb-1c33de5e955d_81phLmwhl4L.-AC-SX522-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604492309",
+          "title": "Alpine Muffy Kids Ear Protection Ear Muffs | 3-16 Years | Green | Autism Sensory Products | 22dB Sound Reduction | Kids Noise Cancelling Ear Muffs | Noise Reduction Headphones for Kids : Tools & Home Improvement",
+          "original_title": "Amazon.com: Alpine Muffy Kids Ear Protection Ear Muffs | 3-16 Years | Green | Autism Sensory Products | 22dB Sound Reduction | Kids Noise Cancelling Ear Muffs | Noise Reduction Headphones for Kids : Tools & Home Improvement",
+          "url": "https://amzn.to/474Biqo",
+          "image": "https://ugc.production.linktr.ee/96997a81-9096-428e-b474-72a2eb66da52_61igMzZg-aL.-AC-SX569-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "604171307",
+          "title": "Oranmew Turtle Sensory Spinning Chair for Autistic Kids & Teens | Calms ADHD & Burns Energy, Boosts Vestibular Balance & Core Strength, 360° Quiet Swivel, 220lbs Capacity, Ages 3+ (Green) : Home & Kitchen",
+          "original_title": "Amazon.com: Oranmew Turtle Sensory Spinning Chair for Autistic Kids & Teens | Calms ADHD & Burns Energy, Boosts Vestibular Balance & Core Strength, 360° Quiet Swivel, 220lbs Capacity, Ages 3+ (Green) : Home & Kitchen",
+          "url": "https://amzn.to/4dhr35x",
+          "image": "https://ugc.production.linktr.ee/f71bd37d-23c6-475b-9ef3-2feea9f25b10_71OTPSmvJbL.-AC-SX522-.jpeg",
+          "type": "CLASSIC"
+        },
+        {
+          "id": "603447242",
+          "title": "Yeeeasy Tapete de agua para el tiempo boca abajo, inflable para bebés, bebés y niños pequeños de 3 a 24 meses, promueve el desarrollo, juguetes esenciales y regalos : Bebés",
+          "original_title": "Amazon.com: Yeeeasy Tapete de agua para el tiempo boca abajo, inflable para bebés, bebés y niños pequeños de 3 a 24 meses, promueve el desarrollo, juguetes esenciales y regalos : Bebés",
+          "url": "https://amzn.to/3TnMLhx",
+          "image": "https://ugc.production.linktr.ee/613b3ae2-79b8-4ce5-aba4-3e780087f26e_91Q8DUDsi-L.-SX522-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "603167496",
+          "title": "Sensory Toys for Kids with Autism 31 Colors Kid Night Light Projector | Baby Sound machine for Sleep 15 White Noise Toys for 1,2,3,4,5 year old Boy Gifts Toddler Autism Sensory Products - Amazon.com",
+          "original_title": "Sensory Toys for Kids with Autism 31 Colors Kid Night Light Projector | Baby Sound machine for Sleep 15 White Noise Toys for 1,2,3,4,5 year old Boy Gifts Toddler Autism Sensory Products - Amazon.com",
+          "url": "https://amzn.to/46TLeTs",
+          "image": "https://ugc.production.linktr.ee/f740052a-6662-49c9-b630-f67486dd8691_81dmLLYhCzL.-AC-SX679-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "603417643",
+          "title": "Tabla de Actividad Sensorial Pushpeel: Juguete de silicona para aliviar el estrés, ansiedad, TDAH y autismo | Silencioso, sin desorden | Niños de 3 años en adelante y adultos | Incluye bolsa de viaje : Salud y Hogar",
+          "original_title": "Amazon.com: Tabla de Actividad Sensorial Pushpeel: Juguete de silicona para aliviar el estrés, ansiedad, TDAH y autismo | Silencioso, sin desorden | Niños de 3 años en adelante y adultos | Incluye bolsa de viaje : Salud y Hogar",
+          "url": "https://amzn.to/4AMTtyt",
+          "image": "https://ugc.production.linktr.ee/3e1c2b33-8973-4384-8ed3-a62826d374be_91o8DtLzZPL.-AC-SX425-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "603166696",
+          "title": "4 Pack LCD Writing Tablet for Kids, 8.5 Inch Colorful Doodle Board Drawing Tablet, Educational Learning Toys Birthday Gifts for Boys Girls Age 3 4 5 6 7 8",
+          "original_title": "4 Pack LCD Writing Tablet for Kids, 8.5 Inch Colorful Doodle Board Drawing Tablet, Educational Learning Toys Birthday Gifts for Boys Girls Age 3 4 5 6 7 8",
+          "url": "https://www.amazon.com/dp/B0D46FMQTJ",
+          "image": "https://ugc.production.linktr.ee/c354cac7-3764-4f47-a6dd-4e1cc3466695_51wv5RB3LmL.-SL500-.jpeg",
+          "type": "COMMERCE_PRODUCT"
+        }
+      ]
+    },
+    {
+      "id": "602379235",
+      "name": "Tecnología",
+      "items": [
+        {
+          "id": "603440909",
+          "title": "Marvel Spider-Man - Relojes para niños, pantalla digital, características interactivas, correa ajustable, gráficos vibrantes de Spider-Man, duraderos para niños activos, rojo, negro (Red /Black : Ropa, Zapatos y Joyería",
+          "original_title": "Amazon.com: Marvel Spider-Man - Relojes para niños, pantalla digital, características interactivas, correa ajustable, gráficos vibrantes de Spider-Man, duraderos para niños activos, rojo, negro (Red /Black : Ropa, Zapatos y Joyería",
+          "url": "https://amzn.to/4y4V1Rw",
+          "image": "https://ugc.production.linktr.ee/aeead443-82b3-4431-8d81-0dc1f9650949_81IHLrl0HRL.-AC-SX679-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        },
+        {
+          "id": "603167170",
+          "title": "Alotwan Microscope for Kids 1000X Digital, Handheld Kids Microscope | HD Screen, Camera & Video, Portable Miniscope, Magnifying Glass for Kids, STEM Toys, Birthday Gifts for Boys & Girls 3-12 : Toys & Games",
+          "original_title": "Amazon.com: Alotwan Microscope for Kids 1000X Digital, Handheld Kids Microscope | HD Screen, Camera & Video, Portable Miniscope, Magnifying Glass for Kids, STEM Toys, Birthday Gifts for Boys & Girls 3-12 : Toys & Games",
+          "url": "https://amzn.to/4j2uHnA",
+          "image": "https://ugc.production.linktr.ee/2f873e12-c2f0-45c5-b7e2-ec85c83d3895_71d6EwJSHwL.-AC-SX522-.jpeg",
+          "type": "AMAZON_PRODUCT"
+        }
+      ]
+    }
+  ]
+}

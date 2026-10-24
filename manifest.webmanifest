@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "Cestoria | Aprende jugando",
+  "short_name": "Cestoria",
+  "description": "Catálogo de productos educativos, Montessori, creativos y sensoriales.",
+  "lang": "es-CO",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f6f0",
+  "theme_color": "#315847",
+  "icons": [
+    {"src":"./icons/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
