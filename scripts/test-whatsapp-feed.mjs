@@ -34,3 +34,25 @@ await assert.rejects(fetchStoreRows("CO", async () => new Response("x", { status
 assert.equal((await handler(new Request("http://x/feed-whatsapp.csv?pais=XX"))).status, 400);
 assert.equal((await handler(new Request("http://x/feed-whatsapp.csv", { method: "POST" }))).status, 405);
 console.log("OK: feed de WhatsApp, 17 comprobaciones superadas");
+
+// ---- Opción B: tres mercados ----
+import { buildAllMarkets, buildCountryOverride } from "../netlify/functions/whatsapp-feed.mjs";
+const r3 = (slug, price, stock = 2) => ({ price, compare_price: null, stock, products: { slug, name: "N " + slug, description: "d", image_url: "https://cdn.x/" + slug + ".jpg", image_urls: [] } });
+const all = buildAllMarkets({ CO: [r3("comun", 50000), r3("solo-co", 60000)], PE: [r3("comun", 49), r3("solo-pe", 99, 0)], EC: [] });
+assert.deepEqual(all.items.map(i => [i.id, i.mercados.join("+"), i.price]), [["comun", "CO+PE", "50000.00 COP"], ["solo-co", "CO", "60000.00 COP"], ["solo-pe", "PE", "99.00 PEN"]]);
+const pe = buildCountryOverride(all, "PE");
+assert.deepEqual(pe.map(r => [r.id, r.override, r.price, r.availability]), [["comun", "PE", "49.00 PEN", "in stock"], ["solo-co", "PE", "", "out of stock"], ["solo-pe", "PE", "99.00 PEN", "out of stock"]]);
+const ec = buildCountryOverride(all, "EC");
+assert.ok(ec.every(r => r.availability === "out of stock" && r.override === "EC"), "Ecuador sin productos: todo agotado");
+globalThis.fetch = async url => { const c = String(url).match(/country_code=eq\.(\w+)/)[1]; return new Response(JSON.stringify(c === "CO" ? [r3("comun", 50000)] : c === "PE" ? [r3("solo-pe", 99)] : [])); };
+let res = await handler(new Request("http://x/feed-whatsapp.csv?mercados=todos"));
+let body = await res.text();
+assert.equal(body.trim().split("\r\n").length, 3, "cabecera + 2 productos");
+res = await handler(new Request("http://x/feed-whatsapp.csv?pais_override=PE"));
+body = await res.text();
+assert.ok(body.startsWith("id,override,price,sale_price,availability,link"));
+assert.ok(body.includes("comun,PE,,,out of stock,") && body.includes("solo-pe,PE,99.00 PEN,,in stock,https://cestoria.shop/producto/solo-pe"));
+assert.equal((await handler(new Request("http://x/feed-whatsapp.csv?pais_override=US"))).status, 400);
+res = await handler(new Request("http://x/feed-whatsapp.csv"));
+assert.equal((await res.text()).trim().split("\r\n").length, 2, "opción A sigue siendo solo Colombia");
+console.log("OK: feed de tres mercados, 9 comprobaciones superadas");
