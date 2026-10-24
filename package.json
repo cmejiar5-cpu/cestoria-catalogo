@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node scripts/test-amazon-product.mjs && node scripts/test-catalog.mjs"
+    "test": "node scripts/test-amazon-product.mjs && node scripts/test-catalog.mjs && node scripts/test-whatsapp-feed.mjs"
   },
   "dependencies": {
     "@netlify/blobs": "11.1.4"
