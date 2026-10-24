@@ -1,0 +1,8 @@
+{
+  "name": "cestoria-catalogo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "echo Static catalog ready"
+  }
+}
