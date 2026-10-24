@@ -6,7 +6,7 @@ import handler from "../netlify/functions/store-products.mjs";
 const { chromium } = createRequire(import.meta.url)("playwright");
 const BASE = "http://127.0.0.1:" + (process.argv[2] || 8765);
 const row = (slug, name, price, cat) => ({ price, compare_price: null, stock: 4, products: { slug, name, image_url: "https://cdn.x/" + slug + ".jpg", image_urls: [], product_categories: [{ categories: { name: cat } }] } });
-const DATA = {
+let geo0;const DATA = {
   CO: [row("tensiometro-de-muneca-mas-oximetro-ds2901", "Tensiometro de muñeca mas Oximetro", 79000, "Salud"), row("nebulizador-ultrasonico", "Nebulizador ultrasónico", 80000, "Salud")],
   PE: [row("smartwatch-hk11", "Smartwatch HK11 Pro Max", 99, "Tecnología")],
   EC: []
@@ -32,24 +32,25 @@ assert.equal(await tens.count(), 1); assert.match(await tens.locator(".price").t
 const neb = p.locator("#products .product", { hasText: "Nebulizador" });
 assert.match(await neb.locator("a.btn").textContent(), /pago contra entrega/i);
 assert.ok((await p.textContent("#chips")).includes("Salud"));
-assert.equal(await p.inputValue("#country"), "CO");
+assert.equal(await p.locator("#country").count(), 0, "sin selector manual");
 
-// Cambia a Perú: desaparecen los productos de la tienda que no se venden allí
-await p.selectOption("#country", "PE"); await waitStore("Smartwatch");
+// Visitante en Perú: solo ve los productos de la tienda de Perú
+geo = "PE"; await p.reload(); await waitStore("Smartwatch");
 assert.equal(await cards(), 32, "31 propios (sin el tensiómetro) + smartwatch");
 assert.equal(await p.locator("#products .product", { hasText: "Tensiometro de muñeca" }).count(), 0);
 assert.match(await p.locator("#products .product", { hasText: "Smartwatch" }).locator(".price").textContent(), /S\/\s?99/);
 
-// La elección se recuerda al volver
-await p.reload(); await waitStore("Smartwatch"); assert.equal(await p.inputValue("#country"), "PE");
+assert.equal(await p.locator("#products .product", { hasText: "Nebulizador" }).count(), 0);
+// Visitante de otro país (España): ve Colombia, como en la tienda
+geo = "ES"; await p.reload(); await waitStore("Nebulizador");
+assert.equal(await p.locator("#products .product", { hasText: "Smartwatch" }).count(), 0);
 
-// Visitante nuevo en Perú detectado automáticamente
+// ?pais= solo para pruebas
 const ctx2 = await b.newContext(); geo = "PE";
 await ctx2.route("**/.netlify/functions/catalog", r => r.fulfill({ status: 404, body: "{}" }));
 await ctx2.route("**/.netlify/functions/store-products*", async r => { const res = await handler(new Request(r.request().url()), { geo: { country: { code: geo } } }); r.fulfill({ status: res.status, headers: Object.fromEntries(res.headers), body: await res.text() }); });
-const p2 = await ctx2.newPage(); await p2.goto(BASE + "/index.html");
+geo = "CO"; const p2 = await ctx2.newPage(); await p2.goto(BASE + "/index.html?pais=PE");
 await p2.waitForFunction(() => document.querySelector("#products").textContent.includes("Smartwatch"));
-assert.equal(await p2.inputValue("#country"), "PE");
 
 // Si la tienda falla, el catálogo sigue con sus productos
 globalThis.fetch = async () => new Response("x", { status: 500 });
