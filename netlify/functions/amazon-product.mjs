@@ -76,9 +76,15 @@ async function braveSearch(originalUrl) {
     signal: AbortSignal.timeout(10000)
   });
   if (!response.ok) {
+    const details = (await response.text()).slice(0, 1000);
+    let reason = "";
+    try {
+      const parsed = JSON.parse(details);
+      reason = typeof parsed.message === "string" ? parsed.message : (typeof parsed.error === "string" ? parsed.error : details);
+    } catch { reason = details; }
     const error = new Error(response.status === 401 || response.status === 403
-      ? "Brave rechazó la clave. Verifica BRAVE_SEARCH_API_KEY en Netlify."
-      : "Brave Search respondió con el estado " + response.status + ".");
+      ? "Brave rechazó la clave o el acceso (HTTP " + response.status + "). Verifica el estado del plan/API en Brave."
+      : "Brave Search respondió HTTP " + response.status + (reason ? ": " + reason : "."));
     error.statusCode = 502;
     throw error;
   }
