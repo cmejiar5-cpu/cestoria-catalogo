@@ -1,0 +1,15 @@
+name: Diagnóstico importador Amazon
+on:
+  workflow_dispatch:
+  push:
+    branches: [ccr-625e2fca-7eiwjz]
+    paths: [scripts/diagnose-amazon.mjs, netlify/functions/**, .github/workflows/diagnose-amazon.yml]
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: node scripts/diagnose-amazon.mjs https://link.amazon/B0i9VFs1 https://link.amazon/B02KjkcGI
