@@ -5,7 +5,7 @@ const reply = (statusCode, data) => ({
 });
 
 const isAmazonHost = host => /(^|\\.)amazon\\.(com|co\\.uk|ca|es|com\\.mx|de|fr|it|co\\.jp|in|com\\.au|com\\.br)$/i.test(host);
-const isShortHost = host => host.toLowerCase() === "amzn.to";
+const isShortHost = host => ["amzn.to", "link.amazon"].includes(host.toLowerCase());
 
 function decodeEntities(s = "") {
   return s.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#(\\d+);/g, (_, n) => String.fromCodePoint(Number(n))).replace(/&#x([\\da-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)));
