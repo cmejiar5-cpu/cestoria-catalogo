@@ -1,7 +1,6 @@
-const reply = (statusCode, data) => ({
-  statusCode,
-  headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
-  body: JSON.stringify(data)
+const reply = (statusCode, data) => new Response(JSON.stringify(data), {
+  status: statusCode,
+  headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
 });
 
 const isAmazonHost = host => /(^|\.)amazon\.(com|co\.uk|ca|es|com\.mx|de|fr|it|co\.jp|in|com\.au|com\.br)$/i.test(host);
@@ -105,12 +104,12 @@ async function braveSearch(originalUrl) {
   };
 }
 
-export default async function handler(event) {
-  if (event.httpMethod !== "POST") return reply(405, { error: "Método no permitido." });
+export default async function handler(request) {
+  if (request.method !== "POST") return reply(405, { error: "Método no permitido." });
   let body;
-  try { body = JSON.parse(event.body || "{}"); }
+  try { body = await request.json(); }
   catch { return reply(400, { error: "Solicitud JSON no válida." }); }
-  if (typeof body.url !== "string" || body.url.length > 2048) return reply(400, { error: "Introduce un enlace válido." });
+  if (!body || typeof body.url !== "string" || body.url.length > 2048) return reply(400, { error: "Introduce un enlace válido." });
   try {
     const input = new URL(body.url);
     if (!["https:", "http:"].includes(input.protocol) || !(isAmazonHost(input.hostname) || isShortHost(input.hostname))) {
