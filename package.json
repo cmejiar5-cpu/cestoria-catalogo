@@ -3,6 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "echo Static catalog ready"
+    "build": "node scripts/build.mjs",
+    "test": "node scripts/test-amazon-product.mjs && node scripts/test-catalog.mjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "11.1.4"
   }
 }
