@@ -25,3 +25,15 @@ Se añadió un aviso de afiliación de Amazon. No se han cambiado los títulos, 
 
 ## Importante
 No cambies los DNS ni asignes `cestoria.shop` como dominio de Netlify. La tienda debe seguir en su alojamiento actual. Si quieres un dominio propio para el catálogo, usa un subdominio independiente como `catalogo.cestoria.shop`.
+
+## Publicar productos (administrador)
+- `admin.html` guarda los cambios como pendientes en el navegador y los publica con «Publicar cambios».
+- Lo publicado se guarda en **Netlify Blobs** (función `netlify/functions/catalog.mjs`). Publicar **no genera un deploy**, así que no gasta los créditos de «production deploy» del plan gratuito (15 créditos cada uno, según la página de precios de Netlify).
+- `cestoria_data.json` queda como catálogo inicial y respaldo si no hay nada publicado.
+- **Configuración obligatoria:** en Netlify → Project configuration → Environment variables, crea `CATALOG_ADMIN_KEY` con una clave larga (20+ caracteres) y con alcance que incluya *Functions*. Después hay que volver a desplegar para que la función la lea.
+- Se guardan las 20 versiones anteriores en el almacén `catalogo` (claves `historial/…`), visibles en Netlify → Data & Storage → Blobs.
+- Las vistas previas (deploy previews) usan otro almacén y no tocan el catálogo real.
+
+## Construcción y pruebas
+- `npm run build` copia solo los archivos públicos a `dist/` (no se publican `node_modules`, `scripts` ni el código de las funciones).
+- `npm test` ejecuta las pruebas sin red de las funciones.
