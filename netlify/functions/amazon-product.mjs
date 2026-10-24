@@ -44,6 +44,15 @@ function meta(html, property) {
   }
   return "";
 }
+// Corta sin dejar palabras o frases a medias.
+function trimAtBoundary(text, max) {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max);
+  const sentence = Math.max(cut.lastIndexOf(". "), cut.lastIndexOf(" · "));
+  if (sentence > max * 0.5) return cut.slice(0, sentence + 1).trim();
+  const space = cut.lastIndexOf(" ");
+  return (space > 0 ? cut.slice(0, space) : cut).replace(/[\s,;:·–-]+$/, "") + "…";
+}
 function visibleText(html) {
   return cleanText(html
     .replace(/<(script|style|noscript|svg|head|nav|footer)[\s\S]*?<\/\1>/gi, " ")
@@ -152,7 +161,7 @@ export default async function handler(request) {
       } catch { image = ""; }
     }
     const text = visibleText(html);
-    const finalDescription = cleanText(description).slice(0, 500);
+    const finalDescription = trimAtBoundary(cleanText(description), 500);
     const finalTitle = /^amazon(\.[a-z.]+)?$/i.test(cleanText(title)) ? "" : cleanText(title).slice(0, 240);
     const hasData = Boolean(finalTitle || finalDescription || image);
     return reply(200, {

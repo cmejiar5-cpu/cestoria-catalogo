@@ -3,12 +3,13 @@
 // No escribe nada en la tienda.
 //   /feed-whatsapp.csv              -> CSV para Commerce Manager (feed programado)
 //   /feed-whatsapp.csv?formato=json -> revisión: productos incluidos y excluidos con el motivo
-import { STORE_SUPABASE_URL, STORE_SUPABASE_PUBLISHABLE_KEY, STORE_PRODUCT_BASE } from "../lib/cestoria-store-public.mjs";
+import { STORE_PRODUCT_BASE } from "../lib/cestoria-store-public.mjs";
+import { fetchStoreRows } from "../lib/store.mjs";
+export { fetchStoreRows };
 
 const COUNTRIES = { CO: "COP", PE: "PEN", EC: "USD" };
 const BRAND = "Cestoria";
 
-const env = k => globalThis.Netlify?.env?.get(k) ?? process.env[k];
 
 function cleanText(v, max) {
   return String(v ?? "")
@@ -63,19 +64,6 @@ export function buildItems(rows, country = "CO") {
 export const COLUMNS = ["id", "title", "description", "availability", "condition", "price", "sale_price", "link", "image_link", "additional_image_link", "brand", "product_type"];
 export function toCsv(items) {
   return [COLUMNS.join(","), ...items.map(it => COLUMNS.map(c => csvCell(it[c])).join(","))].join("\r\n") + "\r\n";
-}
-
-export async function fetchStoreRows(country, fetchImpl = fetch) {
-  const base = (env("CESTORIA_SUPABASE_URL") || STORE_SUPABASE_URL).replace(/\/+$/, "");
-  const key = env("CESTORIA_SUPABASE_KEY") || STORE_SUPABASE_PUBLISHABLE_KEY;
-  const select = "price,compare_price,stock,country_code,products(slug,name,description,image_url,image_urls,product_categories(categories(name)))";
-  const url = base + "/rest/v1/product_prices?select=" + encodeURIComponent(select) +
-    "&country_code=eq." + country + "&is_active=eq.true&order=product_id";
-  const r = await fetchImpl(url, { headers: { apikey: key, Authorization: "Bearer " + key, Accept: "application/json" }, signal: AbortSignal.timeout(15000) });
-  if (!r.ok) throw new Error("La tienda respondió " + r.status);
-  const rows = await r.json();
-  if (!Array.isArray(rows)) throw new Error("Respuesta inesperada de la tienda");
-  return rows;
 }
 
 export default async function handler(request) {
