@@ -16,4 +16,14 @@ const p = await get("/.netlify/functions/catalog", { method: "POST", headers: { 
 assert.ok([401, 503].includes(p.status), "sin clave no se puede publicar"); console.log("   ", await p.text());
 const a = await get("/.netlify/functions/amazon-product", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: "https://link.amazon/B02KjkcGI" }) });
 const aj = await a.json(); console.log("    importador:", aj.source, aj.asin, (aj.title || "").slice(0, 60), aj.image ? "con imagen" : "sin imagen");
+for (const q of ["", "?mercados=todos", "?pais_override=PE"]) {
+  const f = await get("/feed-whatsapp.csv" + q); const t = await f.text();
+  assert.equal(f.status, 200, "feed " + q); console.log("    filas:", t.trim().split("\r\n").length - 1, "|", t.split("\r\n")[0].slice(0, 80));
+}
+for (const c of ["CO", "PE", "EC"]) {
+  const r = await get("/.netlify/functions/store-products?pais=" + c); const d = await r.json();
+  console.log("    tienda " + c + ":", d.country, d.items.length, "productos", d.error || "");
+}
+const geo = await (await get("/.netlify/functions/store-products")).json();
+console.log("    país detectado para el servidor de pruebas:", geo.country, "(detectado:", geo.detected + ")");
 console.log("OK: despliegue verificado en " + base);
