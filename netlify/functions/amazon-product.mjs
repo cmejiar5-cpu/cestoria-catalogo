@@ -68,8 +68,6 @@ async function braveSearch(originalUrl) {
   const query = asin ? "Amazon product " + asin : originalUrl + " Amazon product title description";
   const endpoint = new URL("https://api.search.brave.com/res/v1/web/search");
   endpoint.searchParams.set("q", query);
-  endpoint.searchParams.set("country", "US");
-  endpoint.searchParams.set("search_lang", "en");
   endpoint.searchParams.set("count", "5");
   const response = await fetch(endpoint, {
     headers: { "Accept": "application/json", "X-Subscription-Token": key },
