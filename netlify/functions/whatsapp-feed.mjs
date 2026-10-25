@@ -11,6 +11,14 @@ const COUNTRIES = { CO: "COP", PE: "PEN", EC: "USD" };
 const BRAND = "Cestoria";
 
 
+// Identificador para Meta: el slug si es corto; si no, un recorte estable con huella.
+// (Meta rechazó en el feed de país un identificador de exactamente 100 caracteres.)
+export function feedId(slug) {
+  if (slug.length <= 80) return slug;
+  let h = 2166136261;
+  for (const ch of slug) { h ^= ch.codePointAt(0); h = Math.imul(h, 16777619) >>> 0; }
+  return slug.slice(0, 70).replace(/-+$/, "") + "-" + h.toString(36);
+}
 function cleanText(v, max) {
   return String(v ?? "")
     .replace(/<[^>]*>/g, " ")
@@ -44,7 +52,7 @@ export function buildItems(rows, country = "CO") {
     const onSale = Number.isFinite(compare) && compare > price;
     const cats = (p.product_categories || []).map(c => cleanText(c?.categories?.name, 60)).filter(Boolean);
     items.push({
-      id: slug.slice(0, 100),
+      id: feedId(slug),
       title: name,
       description: cleanText(p.description, 5000) || name,
       availability: Number(r.stock) > 0 ? "in stock" : "out of stock",
