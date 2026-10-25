@@ -37,3 +37,10 @@ No cambies los DNS ni asignes `cestoria.shop` como dominio de Netlify. La tienda
 ## Construcción y pruebas
 - `npm run build` copia solo los archivos públicos a `dist/` (no se publican `node_modules`, `scripts` ni el código de las funciones).
 - `npm test` ejecuta las pruebas sin red de las funciones.
+
+## Instagram (respuesta automática a comentarios)
+- `netlify/functions/instagram-webhook.mjs` (`/instagram-webhook`): recibe avisos de comentarios firmados por Meta y envía un mensaje privado con el producto de la publicación y el WhatsApp.
+- `netlify/functions/instagram-admin.mjs`: configuración y asociación publicación → producto desde `admin.html` (usa `CATALOG_ADMIN_KEY`). El secreto de la app y la llave de acceso se guardan en Netlify Blobs (no hace falta volver a publicar para cambiarlos).
+- `netlify/functions/instagram-token-refresh.mjs`: renueva la llave cada lunes.
+- `privacidad.html`: política de privacidad requerida por Meta.
+- Guía: `docs/Guia_Instagram.docx`.
