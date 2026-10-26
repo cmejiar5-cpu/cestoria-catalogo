@@ -34,6 +34,9 @@ function authorized(request) {
   return { ok: true };
 }
 
+// Netlify cambia la ETag al comprimir la respuesta (W/"…", "…-df"); se compara la parte común.
+export const normEtag = v => String(v || "").trim().replace(/^W\//i, "").replace(/^"|"$/g, "").replace(/-(df|gzip|br|deflate)$/i, "");
+
 const str = (v, n) => typeof v === "string" ? v.replace(/\s+/g, " ").trim().slice(0, n) : "";
 const longStr = (v, n) => typeof v === "string" ? v.trim().slice(0, n) : "";
 function httpsUrl(v) {
@@ -94,7 +97,7 @@ export default async function handler(request, context) {
   if (request.method === "GET") {
     const entry = await store.getWithMetadata(KEY, { type: "json" });
     if (!entry || !entry.data) return json(404, { error: "Aún no hay un catálogo publicado." });
-    return json(200, entry.data, { ETag: entry.etag || "", "X-Saved-At": String(entry.metadata?.savedAt || "") });
+    return json(200, entry.data, { ETag: entry.etag || "", "X-Catalog-Etag": normEtag(entry.etag), "X-Saved-At": String(entry.metadata?.savedAt || "") });
   }
 
   if (request.method !== "POST") return json(405, { error: "Método no permitido." });
@@ -115,7 +118,7 @@ export default async function handler(request, context) {
   const savedAt = new Date().toISOString();
   const previous = await store.getWithMetadata(KEY, { type: "json" });
   const baseEtag = typeof body.baseEtag === "string" && body.baseEtag ? body.baseEtag : null;
-  if (previous && baseEtag && previous.etag !== baseEtag) {
+  if (previous && baseEtag && normEtag(previous.etag) !== normEtag(baseEtag)) {
     return json(409, { error: "El catálogo se publicó desde otro dispositivo después de que abrieras esta página. Recarga para ver la versión actual y vuelve a aplicar tus cambios." });
   }
   if (previous && !baseEtag && body.overwrite !== true) {
@@ -127,7 +130,7 @@ export default async function handler(request, context) {
   }
   const result = await store.setJSON(KEY, catalog, {
     metadata: { savedAt },
-    ...(previous ? (baseEtag ? { onlyIfMatch: baseEtag } : {}) : { onlyIfNew: true })
+    ...(previous ? (baseEtag ? { onlyIfMatch: previous.etag } : {}) : { onlyIfNew: true })
   });
   if (result && result.modified === false) {
     return json(409, { error: "El catálogo cambió mientras se publicaba. Recarga y vuelve a intentarlo." });
@@ -140,5 +143,5 @@ export default async function handler(request, context) {
   } catch (e) { console.error("No se pudo limpiar el historial", e); }
 
   const items = catalog.categories.reduce((n, c) => n + c.items.length, 0);
-  return json(200, { ok: true, savedAt, etag: result?.etag || "", categories: catalog.categories.length, items });
+  return json(200, { ok: true, savedAt, etag: normEtag(result?.etag), categories: catalog.categories.length, items });
 }

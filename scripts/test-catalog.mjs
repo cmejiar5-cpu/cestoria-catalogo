@@ -70,4 +70,12 @@ for (let i = 0; i < 25; i++) {
   r = await handler(req("POST", { catalog, baseEtag: etag }, "clave-larga-de-prueba-123"), prod); assert.equal(r.status, 200); etag = (await r.json()).etag;
 }
 assert.ok([...stores.catalogo.keys()].filter(k => k.startsWith("historial/")).length <= 20);
-console.log("OK: publicación del catálogo, 13 comprobaciones superadas");
+// Netlify cambia la ETag al comprimir ("…-df", W/"…"): debe seguir permitiendo publicar.
+await new Promise(r => setTimeout(r, 2)); let g = await handler(req("GET"), prod); const raw = g.headers.get("etag");
+assert.equal(g.headers.get("x-catalog-etag"), raw.replace(/"/g, ""));
+const compressed = raw.replace(/"$/, '-df"');
+r = await handler(req("POST", { catalog, baseEtag: compressed }, "clave-larga-de-prueba-123"), prod); assert.equal(r.status, 200, "ETag comprimida");
+await new Promise(r => setTimeout(r, 2)); g = await handler(req("GET"), prod);
+r = await handler(req("POST", { catalog, baseEtag: "W/" + g.headers.get("etag") }, "clave-larga-de-prueba-123"), prod); assert.equal(r.status, 200, "ETag débil");
+r = await handler(req("POST", { catalog, baseEtag: compressed }, "clave-larga-de-prueba-123"), prod); assert.equal(r.status, 409, "una versión vieja sigue bloqueada");
+console.log("OK: publicación del catálogo, 17 comprobaciones superadas");
