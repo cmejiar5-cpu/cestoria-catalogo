@@ -56,3 +56,10 @@ assert.equal((await handler(new Request("http://x/feed-whatsapp.csv?pais_overrid
 res = await handler(new Request("http://x/feed-whatsapp.csv"));
 assert.equal((await res.text()).trim().split("\r\n").length, 2, "opción A sigue siendo solo Colombia");
 console.log("OK: feed de tres mercados, 9 comprobaciones superadas");
+
+// Identificadores largos: estables, únicos y de 80 caracteres o menos
+import { feedId } from "../netlify/functions/whatsapp-feed.mjs";
+const long = "mesa-educativa-con-proyector-didactico-para-dibujar-tablero-multifuncional-con-proyeccion-de-figuras-ds2901";
+assert.ok(feedId(long).length <= 80); assert.equal(feedId(long), feedId(long));
+assert.notEqual(feedId(long), feedId(long + "x")); assert.equal(feedId("corto-ds2901"), "corto-ds2901");
+console.log("OK: identificadores largos, 4 comprobaciones superadas");

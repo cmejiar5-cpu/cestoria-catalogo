@@ -27,6 +27,22 @@
 <p>El botón funciona en el navegador, no dentro de la app de Amazon: si el enlace se abre en la app, usa «Abrir en el navegador». Solo lee la página que tú estás viendo y no envía datos a ningún otro sitio.</p>
 </details>
 </section>
+<section class="panel" id="igPanel" style="margin-bottom:18px">
+<h2>Instagram: respuesta automática a comentarios</h2>
+<p>Cuando alguien comenta una publicación, recibe por mensaje privado el enlace del producto de esa publicación y el WhatsApp de Cestoria. Usa la misma <strong>clave de publicación</strong> del recuadro «Publicar en el catálogo».</p>
+<div class="actions"><button class="btn" type="button" id="igStatusBtn">Ver estado</button></div>
+<div class="status" id="igStatus" role="status"></div>
+<details id="igSetup"><summary><strong>Configuración de Meta</strong> (una sola vez)</summary>
+<div class="field"><label for="igSecret">Secreto de la app de Meta (App secret)</label><input id="igSecret" type="password" autocomplete="off" placeholder="Se guarda cifrado en Netlify; no se vuelve a mostrar"></div>
+<div class="field"><label for="igToken">Llave de acceso de Instagram (token)</label><input id="igToken" type="password" autocomplete="off" placeholder="Generada en el panel de la app de Meta"></div>
+<div class="field"><label for="igWa">Enlace de WhatsApp</label><input id="igWa" type="url" placeholder="https://wa.me/573152424445"></div>
+<div class="actions"><button class="btn primary" type="button" id="igSaveBtn">Guardar configuración</button><button class="btn" type="button" id="igSubBtn">Activar avisos de comentarios</button></div>
+<p id="igHookInfo" style="font-size:.85rem"></p>
+</details>
+<div class="actions"><button class="btn" type="button" id="igMediaBtn">Cargar publicaciones recientes</button></div>
+<div id="igMedia" class="list"></div>
+<details><summary><strong>Actividad reciente</strong></summary><div id="igLog" style="font-size:.82rem"></div></details>
+</section>
 <div class="grid">
 <section class="panel">
 <h2 id="formTitle">Añadir producto</h2>
@@ -150,6 +166,33 @@ $('#publishBtn').addEventListener('click',async()=>{const st=$('#publishStatus')
     st.textContent='✅ Publicado: '+d.items+' productos en '+d.categories+' categorías. Puede tardar hasta un minuto en verse en el catálogo.';
   }catch(err){st.textContent='No se publicó. '+(err.message||err);}
   finally{$('#publishBtn').disabled=false;}});
+
+/* ---------- Instagram ---------- */
+async function igCall(body){const key=$('#adminKey').value.trim();if(!key)throw new Error('Escribe tu clave de publicación en el recuadro «Publicar en el catálogo».');
+  const r=await fetch('/.netlify/functions/instagram-admin',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify(body)});
+  const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||('Error '+r.status));return d;}
+const igMsg=t=>{$('#igStatus').textContent=t};
+let igMappings={},igProducts=[];
+async function igLoadProducts(){const list=products.map(p=>({id:String(p.id),title:p.title,image:p.image||'',url:/(^|\.)cestoria\.shop$/.test((()=>{try{return new URL(p.url).hostname}catch{return ''}})())?p.url:(location.protocol==='https:'?location.origin:'https://catalogo-cestoriashop-git.netlify.app')+'/?p='+encodeURIComponent(p.id),label:p.title}));
+  for(const c of ['CO','PE']){try{const r=await fetch('/.netlify/functions/store-products?pais='+c,{cache:'no-store'});const d=await r.json();for(const it of d.items||[])if(!list.some(x=>x.url===it.url))list.push({id:it.id,title:it.title,image:it.image,url:it.url,label:'['+c+' tienda] '+it.title});}catch(_){}}
+  igProducts=list;}
+async function igStatus(){igMsg('Consultando…');try{const d=await igCall({action:'status',checkSubscription:true});igMappings=Object.fromEntries((d.mappings||[]).map(m=>[m.mediaId,m]));
+  igMsg(d.configured?('✅ Conectado a @'+d.username+'. Llave válida hasta '+(d.tokenExpiresAt||'').slice(0,10)+'. Avisos de comentarios: '+(d.subscribed?'activos':'NO activos (pulsa «Activar avisos de comentarios»)')+'. Publicaciones asociadas: '+(d.mappings||[]).length+'.'):'Falta configurar: abre «Configuración de Meta».');
+  if(d.whatsapp)$('#igWa').value=d.whatsapp;
+  $('#igHookInfo').textContent=d.verifyToken?('Datos para Meta → URL de devolución de llamada: '+d.webhookUrl+' · Token de verificación: '+d.verifyToken):'Guarda la configuración para generar el token de verificación.';
+  $('#igLog').innerHTML=(d.log||[]).map(l=>'<div>'+safe((l.at||'').replace('T',' ').slice(0,16))+' · '+safe(l.username?'@'+l.username:'')+' '+safe(l.text?'«'+l.text.slice(0,60)+'»':'')+' → '+safe(l.result)+(l.product?' ('+safe(l.product)+')':'')+'</div>').join('')||'Sin actividad todavía.';
+  if(!d.configured)$('#igSetup').open=true;}catch(e){igMsg(e.message)}}
+$('#igStatusBtn').addEventListener('click',igStatus);
+$('#igSaveBtn').addEventListener('click',async()=>{igMsg('Guardando y comprobando con Meta…');try{const d=await igCall({action:'save-config',appSecret:$('#igSecret').value.trim(),accessToken:$('#igToken').value.trim(),whatsapp:$('#igWa').value.trim()});$('#igSecret').value='';$('#igToken').value='';igMsg('Guardado'+(d.username?' para @'+d.username:'')+'.');igStatus();}catch(e){igMsg('No se guardó. '+e.message)}});
+$('#igSubBtn').addEventListener('click',async()=>{igMsg('Activando…');try{await igCall({action:'subscribe'});igStatus();}catch(e){igMsg('No se activó. '+e.message)}});
+$('#igMediaBtn').addEventListener('click',async()=>{igMsg('Cargando publicaciones…');try{await igLoadProducts();if(!Object.keys(igMappings).length)await igCall({action:'status'}).then(d=>{igMappings=Object.fromEntries((d.mappings||[]).map(m=>[m.mediaId,m]))});
+  const d=await igCall({action:'media'});const opts=igProducts.map((p,i)=>'<option value="'+i+'">'+safe(p.label.slice(0,90))+'</option>').join('');
+  $('#igMedia').innerHTML=(d.items||[]).map(m=>{const cur=igMappings[m.id];const sel=cur?igProducts.findIndex(p=>p.url===cur.url):-1;
+    return '<article class="item"><img src="'+safe(m.image)+'" alt="" onerror="this.style.visibility=\'hidden\'"><div class="meta"><strong>'+safe((m.caption||'(sin texto)').slice(0,80))+'</strong><small>'+safe((m.timestamp||'').slice(0,10))+' · <a href="'+safe(m.permalink)+'" target="_blank" rel="noopener">ver</a></small><select data-ig-media="'+safe(m.id)+'" data-permalink="'+safe(m.permalink)+'" aria-label="Producto de esta publicación"><option value="">— Sin producto (envía el catálogo) —</option>'+opts.replace('value="'+sel+'"','value="'+sel+'" selected')+'</select></div></article>'}).join('')||'<div class="empty">No hay publicaciones.</div>';
+  igMsg((d.items||[]).length+' publicaciones. Elige el producto de cada una; se guarda al elegir.');}catch(e){igMsg(e.message)}});
+$('#igMedia').addEventListener('change',async e=>{const s=e.target.closest('[data-ig-media]');if(!s)return;const mediaId=s.dataset.igMedia;try{
+  if(s.value===''){await igCall({action:'map',mediaId,remove:true});delete igMappings[mediaId];igMsg('Publicación sin producto: responderá con el catálogo.');}
+  else{const p=igProducts[Number(s.value)];await igCall({action:'map',mediaId,permalink:s.dataset.permalink,product:p});igMappings[mediaId]={url:p.url,title:p.title};igMsg('Guardado: esa publicación responderá con «'+p.title+'».');}}catch(err){igMsg('No se guardó. '+err.message)}});
 init().then(()=>{restoreDrafts();applyBookmarkletImport();});
 </script>
 </body></html>
