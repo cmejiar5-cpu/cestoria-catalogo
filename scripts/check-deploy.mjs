@@ -26,4 +26,12 @@ for (const c of ["CO", "PE", "EC"]) {
 }
 const geo = await (await get("/.netlify/functions/store-products")).json();
 console.log("    país detectado para el servidor de pruebas:", geo.country, "(detectado:", geo.detected + ")");
+assert.equal((await get("/privacidad.html")).status, 200);
+const v = await get("/instagram-webhook?hub.mode=subscribe&hub.verify_token=incorrecto&hub.challenge=1");
+assert.equal(v.status, 403, "el webhook rechaza tokens de verificación incorrectos");
+const w = await get("/instagram-webhook", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+assert.ok([401, 503].includes(w.status), "el webhook rechaza avisos sin firma"); console.log("   ", await w.text());
+const ia = await get("/.netlify/functions/instagram-admin", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ action: "status" }) });
+assert.equal(ia.status, 401, "la gestión de Instagram exige la clave");
+const one = await get("/?p=604713012"); assert.equal(one.status, 200);
 console.log("OK: despliegue verificado en " + base);
