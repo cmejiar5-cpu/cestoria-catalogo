@@ -3,8 +3,10 @@ import assert from "node:assert/strict";
 const base = (process.argv[2] || "").replace(/\/$/, "");
 if (!base) throw new Error("Indica la URL base");
 const get = async (path, init) => { const r = await fetch(base + path, init); console.log((init?.method || "GET").padEnd(4), path.padEnd(36), r.status, r.headers.get("content-type")); return r; };
-assert.equal((await get("/")).status, 200);
-assert.equal((await get("/admin.html")).status, 200);
+const home = await get("/"); assert.equal(home.status, 200);
+console.log("    franja catálogo:", (await home.text()).includes("Catálogo independiente"));
+const adm = await get("/admin.html"); assert.equal(adm.status, 200);
+console.log("    franja administrador:", (await adm.text()).includes("Administrador del catálogo independiente"));
 assert.equal((await get("/icons/icon.svg")).status, 200);
 assert.equal((await get("/cestoria_data.json")).status, 200);
 for (const hidden of ["/node_modules/@netlify/blobs/package.json", "/netlify/functions/catalog.mjs", "/package.json", "/scripts/build.mjs"]) {
