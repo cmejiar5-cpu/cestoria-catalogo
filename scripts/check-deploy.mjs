@@ -12,6 +12,10 @@ for (const hidden of ["/node_modules/@netlify/blobs/package.json", "/netlify/fun
 }
 const g = await get("/.netlify/functions/catalog");
 assert.ok([200, 404].includes(g.status), "la función responde"); console.log("   ", (await g.text()).slice(0, 120));
+for (const enc of ["gzip, deflate, br", "identity"]) {
+  const e = await fetch(base + "/.netlify/functions/catalog", { headers: { "Accept-Encoding": enc } });
+  console.log("    ETag (" + enc + "):", e.headers.get("etag"), "| content-encoding:", e.headers.get("content-encoding"), "| x-saved-at:", e.headers.get("x-saved-at")); await e.arrayBuffer();
+}
 const p = await get("/.netlify/functions/catalog", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ verify: true }) });
 assert.ok([401, 503].includes(p.status), "sin clave no se puede publicar"); console.log("   ", await p.text());
 const a = await get("/.netlify/functions/amazon-product", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ url: "https://link.amazon/B02KjkcGI" }) });
