@@ -19,7 +19,10 @@ __setStoreFactoryForTests(() => ({
 async function route(r) {
   const q = r.request();
   const res = await handler(new Request(q.url(), { method: q.method(), headers: q.headers(), body: q.method() === "POST" ? q.postData() : undefined }), { deploy: { context: "production" } });
-  r.fulfill({ status: res.status, headers: Object.fromEntries(res.headers), body: await res.text() });
+  const headers = Object.fromEntries(res.headers);
+  // Como Netlify al comprimir: la ETag llega cambiada ("…-df").
+  if (headers.etag) headers.etag = headers.etag.replace(/"$/, '-df"');
+  r.fulfill({ status: res.status, headers, body: await res.text() });
 }
 
 const b = await chromium.launch();
