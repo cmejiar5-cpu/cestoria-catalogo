@@ -21,6 +21,6 @@ jobs:
       - if: ${{ inputs.base_url }}
         run: node scripts/check-deploy.mjs "${{ inputs.base_url }}"
       - run: node scripts/inspect-feed-ids.mjs
-      - run: node scripts/list-ig-options.mjs
+      - run: node scripts/store-all-products.mjs
       - run: node scripts/preview-feed.mjs CO,PE,EC
       - run: node scripts/diagnose-amazon.mjs https://link.amazon/B02KjkcGI
