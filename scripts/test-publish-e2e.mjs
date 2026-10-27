@@ -67,9 +67,11 @@ assert.match(await p2.textContent("#pendingInfo"), /publicado/);
 
 // 7. Editar y eliminar en el primer dispositivo, publicar
 await p.reload(); await p.waitForFunction(() => document.querySelectorAll("#productList .item").length > 0);
-await p.locator("#productList .item", { hasText: "Hahaland" }).locator("button").click();
+const refBefore = await p.locator("#productList .item", { hasText: "Hahaland" }).locator(".ref").textContent();
+assert.match(refBefore, /^Ref\. C\d+$/, "cada producto publicado muestra su código");
+await p.locator("#productList .item", { hasText: "Hahaland" }).locator("[data-edit]").click();
 await p.fill("#title", "Hahaland - Bloques de silicona (editado)"); await p.click("button[type=submit]");
-await p.locator("#productList .item").nth(5).locator("button").click(); const gone = await p.inputValue("#title");
+await p.locator("#productList .item").nth(5).locator("[data-edit]").click(); const gone = await p.inputValue("#title");
 await p.click("#deleteBtn");
 assert.match(await status("#pendingInfo"), /^2 cambio/);
 await p.fill("#adminKey", KEY); await p.click("#publishBtn"); await p.waitForFunction(() => /Publicado/.test(document.querySelector("#publishStatus").textContent));
@@ -77,6 +79,8 @@ await pub.reload(); await pub.waitForFunction(() => document.querySelectorAll("#
 assert.equal(await pub.locator("#products .product").count(), 32);
 assert.ok((await pub.textContent("#products")).includes("(editado)"));
 assert.ok(!(await pub.textContent("#products")).includes(gone.slice(0, 40)), "eliminado");
+await p.reload(); await p.waitForFunction(() => document.querySelectorAll("#productList .item").length > 0);
+assert.equal(await p.locator("#productList .item", { hasText: "(editado)" }).locator(".ref").textContent(), refBefore, "editar no cambia el código");
 
 // 8. El segundo dispositivo tiene una versión vieja: no pisa los cambios
 await p2.fill("#title", "Producto desde el móvil"); await p2.fill("#url", "https://amzn.to/x"); await p2.fill("#category", "Sensorial"); await p2.click("button[type=submit]");
@@ -89,4 +93,4 @@ await p2.fill("#adminKey", KEY); await p2.click("#publishBtn"); await p2.waitFor
 await pub.reload(); await pub.waitForFunction(() => document.querySelectorAll("#products .product").length > 0);
 assert.equal(await pub.locator("#products .product").count(), 33);
 
-console.log("OK: publicación de extremo a extremo, 8 escenarios superados"); await b.close();
+console.log("OK: publicación de extremo a extremo, 9 escenarios superados"); await b.close();

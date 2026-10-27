@@ -100,7 +100,8 @@ const n = calls.length;
 r = await hook(comment("c4", "u2", "18999999999999999", "comments", false));
 assert.equal(r.data.results[0].result, "enviado");
 assert.match(JSON.parse(calls.at(-1).init.body).message.text, /nuestro catálogo: https:\/\/catalogo-cestoriashop-git\.netlify\.app/);
-assert.equal(calls.length, n + 1);
+assert.equal(calls.length, n + 2, "lee el texto de la publicación (busca Ref.) y envía un solo mensaje");
+assert.match(calls.at(-2).url, /\/18999999999999999\?fields=caption/);
 // 13. Otros campos (menciones, mensajes) se ignoran
 assert.deepEqual(extractComments(comment("c5", "u3", "1", "mentions")), []);
 // 14. Registro de actividad y renovación de llave

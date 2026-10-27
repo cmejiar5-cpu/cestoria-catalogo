@@ -136,6 +136,7 @@ export const igApi = {
     }
     return { data: all };
   },
+  caption: (token, mediaId) => graph("/" + encodeURIComponent(mediaId) + "?fields=caption,permalink", { token }),
   subscribe: token => graph("/me/subscribed_apps?subscribed_fields=comments", { method: "POST", token }),
   subscriptions: token => graph("/me/subscribed_apps", { token }),
   privateReply: (token, igUserId, commentId, text) =>
