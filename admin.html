@@ -174,7 +174,7 @@ async function igCall(body){const key=$('#adminKey').value.trim();if(!key)throw 
 const igMsg=t=>{$('#igStatus').textContent=t};
 let igMappings={},igProducts=[];
 async function igLoadProducts(){const list=products.map(p=>({id:String(p.id),title:p.title,image:p.image||'',url:/(^|\.)cestoria\.shop$/.test((()=>{try{return new URL(p.url).hostname}catch{return ''}})())?p.url:(location.protocol==='https:'?location.origin:'https://catalogo-cestoriashop-git.netlify.app')+'/?p='+encodeURIComponent(p.id),label:p.title}));
-  for(const c of ['CO','PE']){try{const r=await fetch('/.netlify/functions/store-products?pais='+c,{cache:'no-store'});const d=await r.json();for(const it of d.items||[])if(!list.some(x=>x.url===it.url))list.push({id:it.id,title:it.title,image:it.image,url:it.url,label:'['+c+' tienda] '+it.title});}catch(_){}}
+  for(const c of ['CO','PE','EC']){try{const r=await fetch('/.netlify/functions/store-products?pais='+c,{cache:'no-store'});const d=await r.json();for(const it of d.items||[])if(!list.some(x=>x.url===it.url))list.push({id:it.id,title:it.title,image:it.image,url:it.url,label:'['+c+' tienda] '+it.title});}catch(_){}}
   igProducts=list;}
 async function igStatus(){igMsg('Consultando…');try{const d=await igCall({action:'status',checkSubscription:true});igMappings=Object.fromEntries((d.mappings||[]).map(m=>[m.mediaId,m]));
   igMsg(d.configured?('✅ Conectado a @'+d.username+'. Llave válida hasta '+(d.tokenExpiresAt||'').slice(0,10)+'. Avisos de comentarios: '+(d.subscribed?'activos':'NO activos (pulsa «Activar avisos de comentarios»)')+'. Publicaciones asociadas: '+(d.mappings||[]).length+'.'):'Falta configurar: abre «Configuración de Meta».');

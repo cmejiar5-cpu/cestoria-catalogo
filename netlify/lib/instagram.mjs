@@ -106,7 +106,17 @@ async function graph(path, { method = "GET", token, body } = {}) {
 
 export const igApi = {
   me: token => graph("/me?fields=user_id,username", { token }),
-  media: token => graph("/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=30", { token }),
+  // Todas las publicaciones, página a página (hasta 1.000).
+  media: async token => {
+    const all = []; let after = "";
+    for (let page = 0; page < 20; page++) {
+      const r = await graph("/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=50" + (after ? "&after=" + encodeURIComponent(after) : ""), { token });
+      all.push(...(r.data || []));
+      after = r.paging?.cursors?.after || "";
+      if (!r.paging?.next || !after) break;
+    }
+    return { data: all };
+  },
   subscribe: token => graph("/me/subscribed_apps?subscribed_fields=comments", { method: "POST", token }),
   subscriptions: token => graph("/me/subscribed_apps", { token }),
   privateReply: (token, igUserId, commentId, text) =>

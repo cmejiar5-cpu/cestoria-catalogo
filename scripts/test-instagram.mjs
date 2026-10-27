@@ -21,7 +21,15 @@ __setInstagramFetchForTests(async (url, init = {}) => {
   const u = String(url);
   if (u.includes("/me?fields=user_id,username")) return Response.json(init.headers.Authorization === "Bearer BUENA" ? { user_id: "17841424417134943", username: "cestoriashop" } : { error: { message: "Invalid OAuth access token" } }, { status: init.headers.Authorization === "Bearer BUENA" ? 200 : 400 });
   if (u.includes("/messages")) return Response.json({ recipient_id: "x", message_id: "m1" });
-  if (u.includes("/me/media")) return Response.json({ data: [{ id: "18000000000000001", caption: "Botella sensorial ✨", media_type: "VIDEO", thumbnail_url: "https://cdn.ig/t.jpg", permalink: "https://www.instagram.com/reel/abc/", timestamp: "2026-10-24T11:34:00+0000" }] });
+  if (u.includes("/me/media")) {
+    // 3 páginas: 50 + 50 + 1 publicaciones (la primera es la real del resto de pruebas)
+    const page = u.includes("after=p2") ? 2 : u.includes("after=p1") ? 1 : 0;
+    const n = page < 2 ? 50 : 1;
+    const data = Array.from({ length: n }, (_, i) => page === 0 && i === 0
+      ? { id: "18000000000000001", caption: "Botella sensorial ✨", media_type: "VIDEO", thumbnail_url: "https://cdn.ig/t.jpg", permalink: "https://www.instagram.com/reel/abc/", timestamp: "2026-10-24T11:34:00+0000" }
+      : { id: "17" + page + String(i).padStart(15, "0"), caption: page === 2 ? "Microscopio infantil" : "post", media_type: "IMAGE", media_url: "https://cdn.ig/x.jpg", permalink: "https://www.instagram.com/p/x" + page + i + "/", timestamp: "2026-01-01T00:00:00+0000" });
+    return Response.json({ data, paging: { cursors: { after: "p" + (page + 1) }, ...(page < 2 ? { next: "https://graph.instagram.com/next" } : {}) } });
+  }
   if (u.includes("/subscribed_apps")) return Response.json({ success: true });
   if (u.includes("refresh_access_token")) return Response.json({ access_token: "NUEVA", token_type: "bearer", expires_in: 5183944 });
   return new Response("{}", { status: 404 });
@@ -65,6 +73,7 @@ v = await webhook(new Request("https://catalogo.test/instagram-webhook?hub.mode=
 assert.equal(v.status, 403);
 // 6. Publicaciones y asociación con producto
 r = await adm({ action: "media" }); assert.equal(r.data.items[0].id, "18000000000000001");
+assert.equal(r.data.items.length, 101, "trae todas las páginas, no solo las 30 primeras"); assert.equal(r.data.items[100].caption, "Microscopio infantil");
 r = await adm({ action: "map", mediaId: "18000000000000001", permalink: "https://www.instagram.com/reel/abc/", product: { id: "tienda-tensiometro", title: "Tensiómetro de muñeca", url: "https://cestoria.shop/producto/tensiometro" } });
 assert.equal(r.status, 200);
 assert.equal((await adm({ action: "map", mediaId: "18000000000000001", product: { title: "x", url: "javascript:alert(1)" } })).status, 400);
@@ -104,4 +113,4 @@ assert.equal((await preview.json()).configured, false);
 // 16. Utilidades
 assert.equal(validSignature("x", "sha256=zz", SECRET), false);
 assert.match(buildMessage({ username: "", post: null }), /^¡Hola! 😊/);
-console.log("OK: Instagram, 16 escenarios superados");
+console.log("OK: Instagram, 17 escenarios superados");
