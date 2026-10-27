@@ -51,6 +51,10 @@ const idx = opts.findIndex(t => t.includes("Nebulizador")) - 1;
 await p.selectOption("[data-ig-media]", String(idx));
 await p.waitForFunction(() => /Guardado: esa publicación responderá con «Nebulizador/.test(document.querySelector("#igStatus").textContent));
 assert.equal(JSON.parse(m.get("posts/18000000000000001")).url, "https://cestoria.shop/producto/nebulizador");
+// Al asociarla, la publicación se oculta; el botón la vuelve a mostrar
+assert.equal(await p.isVisible("[data-ig-media]"), false, "asociada se oculta");
+assert.match(await p.textContent("#igDoneBtn"), /Ver ya asociadas \(1\)/);
+await p.click("#igDoneBtn"); assert.equal(await p.isVisible("[data-ig-media]"), true, "se puede volver a ver");
 // Producto propio (Amazon) -> enlace a la ficha del catálogo ?p=
 const prephy = opts.findIndex(t => t.includes("PREPHY")) - 1;
 await p.selectOption("[data-ig-media]", String(prephy));
@@ -59,10 +63,12 @@ const link = JSON.parse(m.get("posts/18000000000000001")).url;
 assert.match(link, /\/\?p=604713012$/);
 // Recargar las publicaciones conserva la elección
 await p.click("#igMediaBtn"); await p.waitForTimeout(400);
+assert.equal(await p.isVisible("[data-ig-media]"), true, "sigue visible con «Ver ya asociadas» activo");
+await p.click("#igDoneBtn"); assert.equal(await p.isVisible("[data-ig-media]"), false, "ocultar de nuevo");
 assert.match(await p.$eval("[data-ig-media]", s => s.options[s.selectedIndex].textContent), /PREPHY/);
 // El enlace ?p= abre solo ese producto en el catálogo
 const pub = await ctx.newPage(); await pub.goto(link.replace(/^https?:\/\/[^/]+/, BASE));
 await pub.waitForFunction(() => document.querySelectorAll("#products .product").length === 1);
 assert.match(await pub.textContent("#products"), /PREPHY/);
 await pub.click("#showAll"); await pub.waitForFunction(() => document.querySelectorAll("#products .product").length > 1);
-console.log("OK: Instagram en navegador, 8 escenarios superados"); await b.close();
+console.log("OK: Instagram en navegador, 10 escenarios superados"); await b.close();
