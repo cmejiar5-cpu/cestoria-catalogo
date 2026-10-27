@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<meta name="theme-color" content="#333333">
+<meta name="theme-color" content="#d50505"><link rel="manifest" href="admin.webmanifest"><link rel="apple-touch-icon" href="icons/admin-apple-180.png"><meta name="apple-mobile-web-app-title" content="Admin Cestoria">
 <title>Administración | Cestoria</title>
 <style>
 :root{--green:#333333;--ink:#333333;--muted:#6b6b6b;--bg:#f9f9f9;--paper:#ffffff;--line:#dfdfdf;--mint:#eef1ea;--danger:#9c3737}
@@ -12,7 +12,7 @@
 </head>
 <body><div class="indie-band" role="banner"><strong>Administrador del catálogo independiente</strong><span>Aquí se edita el catálogo independiente · no es el panel de cestoria.shop</span></div>
 <div class="wrap">
-<header class="top"><div class="brand">🌿 Cestoria <span style="font-weight:500;color:var(--muted)">/ Administración</span></div><span class="pill">CATÁLOGO INDEPENDIENTE</span></header>
+<header class="top"><div class="brand">🌿 Cestoria <span style="font-weight:500;color:var(--muted)">/ Administración</span></div><span style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button type="button" class="btn" id="installAdmin" hidden>＋ Instalar administrador</button><span class="pill">CATÁLOGO INDEPENDIENTE</span></span></header>
 <section class="hero"><h1>Administra tu catálogo</h1><p>Prepara productos, categorías, imágenes y enlaces desde un solo lugar.</p></section>
 <div class="notice"><strong>Cómo funciona.</strong> Los productos que guardas quedan como <em>cambios pendientes</em> en este navegador. Aparecen en el catálogo público cuando pulsas «Publicar cambios» con tu clave de publicación. La clave solo se escribe en ese campo; no la compartas.</div>
 <section class="panel" id="bookmarkletPanel" style="margin-bottom:18px">
@@ -203,5 +203,11 @@ $('#igMedia').addEventListener('change',async e=>{const s=e.target.closest('[dat
   else{const p=igProducts[Number(s.value)];await igCall({action:'map',mediaId,permalink:s.dataset.permalink,product:p});igMappings[mediaId]={url:p.url,title:p.title};igMsg('Guardado: esa publicación responderá con «'+p.title+'». Se ocultó de la lista.');}
   const qi=document.querySelector('[data-ig-q="'+mediaId+'"]');if(qi)qi.value='';s.removeAttribute('size');s.closest('.item').classList.toggle('ig-done',s.value!=='');igRefreshOptions();igDoneCount();}catch(err){igMsg('No se guardó. '+err.message)}});
 init().then(()=>{restoreDrafts();applyBookmarkletImport();});
+
+/* Instalar el administrador como app (PWA). Sin guardado sin conexión: siempre carga la versión real. */
+let adminInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();adminInstall=e;$('#installAdmin').hidden=false;});
+$('#installAdmin').addEventListener('click',async()=>{if(!adminInstall)return;adminInstall.prompt();try{await adminInstall.userChoice}catch(_){}adminInstall=null;$('#installAdmin').hidden=true;});
+window.addEventListener('appinstalled',()=>{$('#installAdmin').hidden=true;});
 </script>
 </body></html>
