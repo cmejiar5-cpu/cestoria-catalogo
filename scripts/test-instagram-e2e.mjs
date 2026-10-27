@@ -55,6 +55,18 @@ assert.equal(JSON.parse(m.get("posts/18000000000000001")).url, "https://cestoria
 const other = await p.$$eval('[data-ig-media="18000000000000002"] option', os => os.map(o => o.textContent));
 assert.match(other[other.length - 1], /^✓ ya usado · .*Nebulizador/, "usado al final y marcado");
 assert.equal(other.filter(t => t.startsWith("✓")).length, 1);
+// Buscador de productos: filtra las opciones de esa publicación (sin tildes ni mayúsculas)
+await p.fill('[data-ig-q="18000000000000002"]', "NEBULIZADÓR");
+const filtered = await p.$$eval('[data-ig-media="18000000000000002"] option', os => os.map(o => o.textContent));
+assert.equal(filtered.length, 2, "solo «Sin producto» y el que coincide"); assert.match(filtered[1], /Nebulizador/);
+await p.fill('[data-ig-q="18000000000000002"]', "");
+assert.equal((await p.$$eval('[data-ig-media="18000000000000002"] option', os => os.length)), other.length, "sin búsqueda vuelven todas");
+// Buscador de publicaciones: muestra también las ya asociadas que coinciden
+await p.fill("#igPostSearch", "sensoriales");
+assert.equal(await p.isVisible('[data-ig-media="18000000000000001"]'), true, "asociada visible al buscar");
+assert.equal(await p.isVisible('[data-ig-media="18000000000000002"]'), false, "la que no coincide se oculta");
+await p.fill("#igPostSearch", "");
+assert.equal(await p.isVisible('[data-ig-media="18000000000000001"]'), false, "sin búsqueda la asociada vuelve a ocultarse");
 // Al asociarla, la publicación se oculta; el botón la vuelve a mostrar
 assert.equal(await p.isVisible('[data-ig-media="18000000000000001"]'), false, "asociada se oculta");
 assert.match(await p.textContent("#igDoneBtn"), /Ver ya asociadas \(1\)/);
@@ -75,4 +87,4 @@ const pub = await ctx.newPage(); await pub.goto(link.replace(/^https?:\/\/[^/]+/
 await pub.waitForFunction(() => document.querySelectorAll("#products .product").length === 1);
 assert.match(await pub.textContent("#products"), /PREPHY/);
 await pub.click("#showAll"); await pub.waitForFunction(() => document.querySelectorAll("#products .product").length > 1);
-console.log("OK: Instagram en navegador, 12 escenarios superados"); await b.close();
+console.log("OK: Instagram en navegador, 17 escenarios superados"); await b.close();
