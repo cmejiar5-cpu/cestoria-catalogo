@@ -17,7 +17,7 @@ __setInstagramStoreForTests(() => ({
 __setInstagramFetchForTests(async url => {
   const u = String(url);
   if (u.includes("/me?fields")) return Response.json({ user_id: "17841424417134943", username: "cestoriashop" });
-  if (u.includes("/me/media")) return Response.json({ data: [{ id: "18000000000000001", caption: "¿Buscas juegos sensoriales?", media_type: "VIDEO", thumbnail_url: "https://cdn.ig/t.jpg", permalink: "https://www.instagram.com/reel/abc/", timestamp: "2026-10-24T11:34:00+0000" }] });
+  if (u.includes("/me/media")) return Response.json({ data: [{ id: "18000000000000001", caption: "¿Buscas juegos sensoriales?", media_type: "VIDEO", thumbnail_url: "https://cdn.ig/t.jpg", permalink: "https://www.instagram.com/reel/abc/", timestamp: "2026-10-24T11:34:00+0000" }, { id: "18000000000000002", caption: "Otro reel", media_type: "VIDEO", thumbnail_url: "https://cdn.ig/t2.jpg", permalink: "https://www.instagram.com/reel/def/", timestamp: "2026-10-23T11:34:00+0000" }] });
   if (u.includes("subscribed_apps")) return Response.json(u.includes("subscribed_fields") ? { success: true } : { data: [{ subscribed_fields: ["comments"] }] });
   return new Response("{}", { status: 404 });
 });
@@ -44,31 +44,35 @@ assert.equal(await p.inputValue("#igSecret"), "", "no deja el secreto en pantall
 assert.match(await p.textContent("#igHookInfo"), /instagram-webhook · Token de verificación: cestoria-/);
 assert.match(await status(), /Avisos de comentarios: activos/);
 // Publicaciones y asociación
-await p.click("#igMediaBtn"); await p.waitForSelector("[data-ig-media]");
-const opts = await p.$$eval("[data-ig-media] option", os => os.map(o => o.textContent));
+await p.click("#igMediaBtn"); await p.waitForSelector('[data-ig-media="18000000000000001"]');
+const opts = await p.$$eval('[data-ig-media="18000000000000001"] option', os => os.map(o => o.textContent));
 assert.ok(opts.some(t => t.includes("[CO tienda] Nebulizador")) && opts.some(t => t.includes("PREPHY")), "productos propios y de la tienda");
 const idx = opts.findIndex(t => t.includes("Nebulizador")) - 1;
-await p.selectOption("[data-ig-media]", String(idx));
+await p.selectOption('[data-ig-media="18000000000000001"]', String(idx));
 await p.waitForFunction(() => /Guardado: esa publicación responderá con «Nebulizador/.test(document.querySelector("#igStatus").textContent));
 assert.equal(JSON.parse(m.get("posts/18000000000000001")).url, "https://cestoria.shop/producto/nebulizador");
+// En la otra publicación, el producto ya usado pasa al final con la marca «✓ ya usado»
+const other = await p.$$eval('[data-ig-media="18000000000000002"] option', os => os.map(o => o.textContent));
+assert.match(other[other.length - 1], /^✓ ya usado · .*Nebulizador/, "usado al final y marcado");
+assert.equal(other.filter(t => t.startsWith("✓")).length, 1);
 // Al asociarla, la publicación se oculta; el botón la vuelve a mostrar
-assert.equal(await p.isVisible("[data-ig-media]"), false, "asociada se oculta");
+assert.equal(await p.isVisible('[data-ig-media="18000000000000001"]'), false, "asociada se oculta");
 assert.match(await p.textContent("#igDoneBtn"), /Ver ya asociadas \(1\)/);
-await p.click("#igDoneBtn"); assert.equal(await p.isVisible("[data-ig-media]"), true, "se puede volver a ver");
+await p.click("#igDoneBtn"); assert.equal(await p.isVisible('[data-ig-media="18000000000000001"]'), true, "se puede volver a ver");
 // Producto propio (Amazon) -> enlace a la ficha del catálogo ?p=
 const prephy = opts.findIndex(t => t.includes("PREPHY")) - 1;
-await p.selectOption("[data-ig-media]", String(prephy));
+await p.selectOption('[data-ig-media="18000000000000001"]', String(prephy));
 await p.waitForFunction(() => /PREPHY/.test(document.querySelector("#igStatus").textContent));
 const link = JSON.parse(m.get("posts/18000000000000001")).url;
 assert.match(link, /\/\?p=604713012$/);
 // Recargar las publicaciones conserva la elección
 await p.click("#igMediaBtn"); await p.waitForTimeout(400);
-assert.equal(await p.isVisible("[data-ig-media]"), true, "sigue visible con «Ver ya asociadas» activo");
-await p.click("#igDoneBtn"); assert.equal(await p.isVisible("[data-ig-media]"), false, "ocultar de nuevo");
-assert.match(await p.$eval("[data-ig-media]", s => s.options[s.selectedIndex].textContent), /PREPHY/);
+assert.equal(await p.isVisible('[data-ig-media="18000000000000001"]'), true, "sigue visible con «Ver ya asociadas» activo");
+await p.click("#igDoneBtn"); assert.equal(await p.isVisible('[data-ig-media="18000000000000001"]'), false, "ocultar de nuevo");
+assert.match(await p.$eval('[data-ig-media="18000000000000001"]', s => s.options[s.selectedIndex].textContent), /PREPHY/);
 // El enlace ?p= abre solo ese producto en el catálogo
 const pub = await ctx.newPage(); await pub.goto(link.replace(/^https?:\/\/[^/]+/, BASE));
 await pub.waitForFunction(() => document.querySelectorAll("#products .product").length === 1);
 assert.match(await pub.textContent("#products"), /PREPHY/);
 await pub.click("#showAll"); await pub.waitForFunction(() => document.querySelectorAll("#products .product").length > 1);
-console.log("OK: Instagram en navegador, 10 escenarios superados"); await b.close();
+console.log("OK: Instagram en navegador, 12 escenarios superados"); await b.close();
