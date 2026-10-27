@@ -18,4 +18,11 @@ await a.selectOption("#type", "ALLY_CONTENT");
 assert.equal(await a.inputValue("#category"), "Aprende con nuestros aliados", "categoría sugerida");
 await a.fill("#category", "Otra"); await a.selectOption("#type", "CLASSIC"); await a.selectOption("#type", "ALLY_CONTENT");
 assert.equal(await a.inputValue("#category"), "Otra", "no pisa una categoría escrita");
-console.log("OK: contenido aliado en navegador, 6 escenarios superados"); await b.close();
+// El CSV de aliados se importa como «Contenido o app aliada»
+a.on("dialog", d => d.accept());
+await a.setInputFiles("#csvInput", new URL("../docs/aliados_cestoria.csv", import.meta.url).pathname);
+await a.waitForFunction(() => /Club Animalitos – Juego/.test(document.querySelector("#productList").textContent));
+const drafts = JSON.parse(await a.evaluate(() => localStorage.getItem("cestoria-drafts")) || "[]");
+const allies = drafts.filter(d => d.type === "ALLY_CONTENT");
+assert.equal(allies.length, 3, "3 aliados importados"); assert.ok(allies.every(d => d.categoryName === "Aprende con nuestros aliados"));
+console.log("OK: contenido aliado en navegador, 8 escenarios superados"); await b.close();
