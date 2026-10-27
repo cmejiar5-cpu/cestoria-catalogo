@@ -113,4 +113,10 @@ assert.equal((await preview.json()).configured, false);
 // 16. Utilidades
 assert.equal(validSignature("x", "sha256=zz", SECRET), false);
 assert.match(buildMessage({ username: "", post: null }), /^¡Hola! 😊/);
-console.log("OK: Instagram, 17 escenarios superados");
+// Contenido aliado: no habla de «producto» ni de «pedirlo»
+const ally = buildMessage({ username: "ana", post: { kind: "ally", title: "Club Animalitos", url: "https://catalogo.test/?p=a1" } });
+assert.match(ally, /Aquí tienes el contenido que viste:\nClub Animalitos/); assert.doesNotMatch(ally, /producto|pedirlo/);
+assert.match(buildMessage({ username: "ana", post: { title: "Tren", url: "https://cestoria.shop/producto/tren" } }), /el producto que viste/);
+r = await adm({ action: "map", mediaId: "18000000000000009", permalink: "https://www.instagram.com/reel/z/", product: { id: "a1", kind: "ally", title: "Club Animalitos", url: "https://www.youtube.com/@clubanimalitos" } });
+assert.equal(JSON.parse(stores.instagram.get("posts/18000000000000009")).kind, "ally");
+console.log("OK: Instagram, 21 escenarios superados");

@@ -81,8 +81,8 @@ export function buildMessage({ username, post, whatsapp }) {
   const hola = "¡Hola" + (username ? " @" + username : "") + "! 😊 Gracias por tu comentario.";
   const wa = whatsapp || DEFAULT_WHATSAPP;
   if (post?.url) {
-    return hola + "\n\nAquí tienes el producto que viste:\n" + post.title + "\n" + post.url +
-      "\n\n¿Tienes dudas o quieres pedirlo? Escríbenos por WhatsApp: " + wa;
+    return hola + "\n\nAquí tienes " + (post.kind === "ally" ? "el contenido" : "el producto") + " que viste:\n" + post.title + "\n" + post.url +
+      "\n\n" + (post.kind === "ally" ? "¿Quieres conocer nuestros juguetes? Escríbenos por WhatsApp: " : "¿Tienes dudas o quieres pedirlo? Escríbenos por WhatsApp: ") + wa;
   }
   return hola + "\n\nAquí tienes nuestro catálogo: " + CATALOG_BASE +
     "\n\n¿Buscas algo en especial? Escríbenos por WhatsApp: " + wa;

@@ -79,3 +79,9 @@ await new Promise(r => setTimeout(r, 2)); g = await handler(req("GET"), prod);
 r = await handler(req("POST", { catalog, baseEtag: "W/" + g.headers.get("etag") }, "clave-larga-de-prueba-123"), prod); assert.equal(r.status, 200, "ETag débil");
 r = await handler(req("POST", { catalog, baseEtag: compressed }, "clave-larga-de-prueba-123"), prod); assert.equal(r.status, 409, "una versión vieja sigue bloqueada");
 console.log("OK: publicación del catálogo, 17 comprobaciones superadas");
+// Contenido o app aliada: tipo aceptado y conservado
+{
+  const c = sanitizeCatalog({ categories: [{ name: "Aprende con nuestros aliados", items: [{ title: "Club Animalitos", url: "https://www.youtube.com/@clubanimalitos", type: "ALLY_CONTENT" }] }] });
+  assert.equal(c.categories[0].items[0].type, "ALLY_CONTENT");
+  console.log("OK: contenido aliado aceptado");
+}
