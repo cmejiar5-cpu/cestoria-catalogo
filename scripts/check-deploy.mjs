@@ -4,10 +4,11 @@ const base = (process.argv[2] || "").replace(/\/$/, "");
 if (!base) throw new Error("Indica la URL base");
 const get = async (path, init) => { const r = await fetch(base + path, init); console.log((init?.method || "GET").padEnd(4), path.padEnd(36), r.status, r.headers.get("content-type")); return r; };
 const home = await get("/"); assert.equal(home.status, 200);
-console.log("    franja catálogo:", (await home.text()).includes("Catálogo independiente"));
+const homeTxt = await home.text();
+console.log("    franja catálogo:", homeTxt.includes("Catálogo independiente"), "| botón aliados:", homeTxt.includes("Ver contenido"));
 const adm = await get("/admin.html"); assert.equal(adm.status, 200);
 const admTxt = await adm.text();
-console.log("    franja administrador:", admTxt.includes("Administrador del catálogo independiente"), "| ocultar asociadas:", admTxt.includes("igDoneBtn"), "| buscadores:", admTxt.includes("igPostSearch") && admTxt.includes("data-ig-q"));
+console.log("    franja administrador:", admTxt.includes("Administrador del catálogo independiente"), "| ocultar asociadas:", admTxt.includes("igDoneBtn"), "| buscadores:", admTxt.includes("igPostSearch") && admTxt.includes("data-ig-q"), "| aliados:", admTxt.includes("ALLY_CONTENT") && admTxt.includes("'PE','EC'"));
 assert.equal((await get("/icons/icon.svg")).status, 200);
 assert.equal((await get("/cestoria_data.json")).status, 200);
 for (const hidden of ["/node_modules/@netlify/blobs/package.json", "/netlify/functions/catalog.mjs", "/package.json", "/scripts/build.mjs"]) {

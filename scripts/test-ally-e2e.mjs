@@ -25,4 +25,11 @@ await a.waitForFunction(() => /Club Animalitos – Juego/.test(document.querySel
 const drafts = JSON.parse(await a.evaluate(() => localStorage.getItem("cestoria-drafts")) || "[]");
 const allies = drafts.filter(d => d.type === "ALLY_CONTENT");
 assert.equal(allies.length, 3, "3 aliados importados"); assert.ok(allies.every(d => d.categoryName === "Aprende con nuestros aliados"));
-console.log("OK: contenido aliado en navegador, 8 escenarios superados"); await b.close();
+// «Ver/editar» lleva al formulario (no al principio de la página)
+await a.setViewportSize({ width: 390, height: 700 });
+await a.click('[data-edit]');
+await a.waitForTimeout(800);
+const box = await a.$eval("#formTitle", e => e.getBoundingClientRect().top);
+assert.ok(box >= -5 && box < 700, "el formulario queda a la vista");
+assert.equal(await a.textContent("#formTitle"), "Revisar producto");
+console.log("OK: contenido aliado en navegador, 10 escenarios superados"); await b.close();

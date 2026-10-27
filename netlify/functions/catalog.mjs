@@ -10,25 +10,43 @@ const HISTORY_PREFIX = "historial/";
 const HISTORY_KEEP = 20;
 const MAX_BODY = 2_000_000;
 const TYPES = ["AMAZON_PRODUCT", "CLASSIC", "COMMERCE_PRODUCT", "ALLY_CONTENT"];
+// Código corto de cada producto («Ref. C27») para ponerlo al final de las publicaciones de Instagram.
+export const REF_RE = /^C\d{1,6}$/;
+const refNum = r => (REF_RE.test(String(r || "")) ? Number(String(r).slice(1)) : 0);
+
+// Da código a los productos que no lo tienen. Los números nunca se reutilizan
+// (ref_seq guarda el último entregado), así una publicación vieja no apunta a otro producto.
+export function assignRefs(catalog) {
+  const items = catalog.categories.flatMap(c => c.items);
+  const seen = new Set();
+  let seq = Math.max(Number(catalog.ref_seq) || 0, ...items.map(it => refNum(it.ref)), 0);
+  for (const it of items) {
+    if (it.ref && REF_RE.test(it.ref) && !seen.has(it.ref)) { seen.add(it.ref); continue; }
+    it.ref = "C" + (++seq);
+    seen.add(it.ref);
+  }
+  catalog.ref_seq = seq;
+  return catalog;
+}
 
 let storeFactory = name => getStore({ name, consistency: "strong" });
 export function __setStoreFactoryForTests(fn) { storeFactory = fn; }
 
 // Las vistas previas (deploy previews / ramas) usan otro almacén para no tocar el catálogo real.
-function storeFor(context) {
+export function storeFor(context) {
   const ctx = context?.deploy?.context;
   return storeFactory(!ctx || ctx === "production" ? "catalogo" : "catalogo-" + String(ctx).replace(/[^a-z0-9-]/gi, ""));
 }
 
-const json = (status, data, headers = {}) => new Response(JSON.stringify(data), {
+export const json = (status, data, headers = {}) => new Response(JSON.stringify(data), {
   status,
   headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...headers }
 });
 
 const digest = v => createHash("sha256").update(String(v)).digest();
-function authorized(request) {
-  const expected = (globalThis.Netlify?.env?.get("CATALOG_ADMIN_KEY") ?? process.env.CATALOG_ADMIN_KEY ?? "").trim();
-  if (!expected) return { ok: false, status: 503, error: "Falta configurar la variable CATALOG_ADMIN_KEY en Netlify." };
+export function authorized(request, envName = "CATALOG_ADMIN_KEY") {
+  const expected = (globalThis.Netlify?.env?.get(envName) ?? process.env[envName] ?? "").trim();
+  if (!expected) return { ok: false, status: 503, error: "Falta configurar la variable " + envName + " en Netlify." };
   const given = (request.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
   if (!given || !timingSafeEqual(digest(given), digest(expected))) return { ok: false, status: 401, error: "Clave de publicación incorrecta." };
   return { ok: true };
@@ -56,7 +74,8 @@ export function sanitizeCatalog(input) {
     socials: (Array.isArray(input.socials) ? input.socials : []).slice(0, 10).map(s => ({
       name: str(s?.name, 40), url: httpsUrl(s?.url) || "", icon: str(s?.icon, 20)
     })).filter(s => s.name && s.url),
-    categories: []
+    categories: [],
+    ref_seq: Number.isInteger(input.ref_seq) && input.ref_seq > 0 ? Math.min(input.ref_seq, 999999) : 0
   };
   let total = 0;
   const ids = new Set();
@@ -84,11 +103,12 @@ export function sanitizeCatalog(input) {
         const original = str(p?.original_title, 400); if (original) item.original_title = original;
         const description = longStr(p?.description, 1000); if (description) item.description = description;
         if (p?.featured === true) item.featured = true;
+        if (typeof p?.ref === "string" && REF_RE.test(p.ref.trim().toUpperCase())) item.ref = p.ref.trim().toUpperCase();
         return item;
       })
     });
   });
-  return out;
+  return assignRefs(out);
 }
 
 export default async function handler(request, context) {
