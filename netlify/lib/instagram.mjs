@@ -24,6 +24,25 @@ export function igStore(context) {
   return storeFactory(!ctx || ctx === "production" ? "instagram" : "instagram-" + String(ctx).replace(/[^a-z0-9-]/gi, ""));
 }
 
+// Catálogo publicado (mismo almacén que netlify/functions/catalog.mjs).
+export function catalogStore(context) {
+  const ctx = context?.deploy?.context;
+  return storeFactory(!ctx || ctx === "production" ? "catalogo" : "catalogo-" + String(ctx).replace(/[^a-z0-9-]/gi, ""));
+}
+
+// Al enviar el mensaje se usan los datos actuales del producto del catálogo propio:
+// si se cambió el nombre, sale el nombre nuevo; si se borró, se envía el catálogo.
+// Los productos de cestoria.shop no están en este catálogo y se usan tal como se guardaron.
+export function refreshPost(post, catalog) {
+  if (!post || !post.productId || !/[?&]p=/.test(post.url || "") || !catalog) return post;
+  for (const c of catalog.categories || []) for (const it of c.items || []) {
+    if (String(it.id) === String(post.productId)) {
+      return { ...post, title: it.title || post.title, kind: it.type === "ALLY_CONTENT" ? "ally" : (post.kind || "product") };
+    }
+  }
+  return null;
+}
+
 export const json = (status, data) => new Response(JSON.stringify(data), {
   status, headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
 });

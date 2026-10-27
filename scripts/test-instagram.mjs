@@ -119,4 +119,16 @@ assert.match(ally, /Aquí tienes el contenido que viste:\nClub Animalitos/); ass
 assert.match(buildMessage({ username: "ana", post: { title: "Tren", url: "https://cestoria.shop/producto/tren" } }), /el producto que viste/);
 r = await adm({ action: "map", mediaId: "18000000000000009", permalink: "https://www.instagram.com/reel/z/", product: { id: "a1", kind: "ally", title: "Club Animalitos", url: "https://www.youtube.com/@clubanimalitos" } });
 assert.equal(JSON.parse(stores.instagram.get("posts/18000000000000009")).kind, "ally");
-console.log("OK: Instagram, 21 escenarios superados");
+// El mensaje usa el nombre ACTUAL del producto del catálogo propio (renombrado después de emparejar)
+await adm({ action: "map", mediaId: "18000000000000010", permalink: "https://www.instagram.com/p/n/", product: { id: "603392334", title: "www.amazon.com", url: "https://catalogo.test/?p=603392334" } });
+stores.catalogo = new Map([["publicado", JSON.stringify({ categories: [{ name: "Stem", items: [{ id: "603392334", title: "Numberblocks del 6 al 10", url: "https://amzn.to/x", type: "AMAZON_PRODUCT" }] }] })]]);
+r = await hook(comment("c20", "u20", "18000000000000010"));
+assert.equal(r.data.results[0].result, "enviado");
+let txt = JSON.parse(calls.at(-1).init.body).message.text;
+assert.match(txt, /Numberblocks del 6 al 10\nhttps:\/\/catalogo\.test\/\?p=603392334/); assert.doesNotMatch(txt, /www\.amazon\.com/);
+// Producto borrado del catálogo -> envía el catálogo completo, no un enlace roto
+stores.catalogo = new Map([["publicado", JSON.stringify({ categories: [{ name: "Stem", items: [] }] })]]);
+r = await hook(comment("c21", "u21", "18000000000000010"));
+txt = JSON.parse(calls.at(-1).init.body).message.text;
+assert.match(txt, /nuestro catálogo/); assert.doesNotMatch(txt, /p=603392334/);
+console.log("OK: Instagram, 25 escenarios superados");

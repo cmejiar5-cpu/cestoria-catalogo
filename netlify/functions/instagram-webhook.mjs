@@ -2,7 +2,7 @@
 // mensaje privado: enlace del producto de esa publicación + WhatsApp de Cestoria.
 //   GET  /instagram-webhook  -> verificación de Meta (hub.challenge)
 //   POST /instagram-webhook  -> avisos firmados con X-Hub-Signature-256
-import { igStore, getConfig, validSignature, extractComments, buildMessage, igApi, addLog, json } from "../lib/instagram.mjs";
+import { igStore, catalogStore, refreshPost, getConfig, validSignature, extractComments, buildMessage, igApi, addLog, json } from "../lib/instagram.mjs";
 
 export default async function handler(request, context) {
   const store = igStore(context);
@@ -25,6 +25,11 @@ export default async function handler(request, context) {
   try { body = JSON.parse(raw); } catch { return json(400, { error: "JSON no válido." }); }
 
   const results = [];
+  let catalog;
+  const currentCatalog = async () => {
+    if (catalog === undefined) { try { catalog = await catalogStore(context).get("publicado", { type: "json" }); } catch { catalog = null; } }
+    return catalog;
+  };
   for (const c of extractComments(body)) {
     const own = c.fromId && (c.fromId === cfg.igUserId || c.fromId === c.accountId);
     if (own) { results.push({ commentId: c.commentId, result: "propio" }); continue; }
@@ -36,7 +41,8 @@ export default async function handler(request, context) {
       await addLog(store, { ...c, result: "ya se le había enviado en esta publicación" });
       results.push({ commentId: c.commentId, result: "ya enviado" }); continue;
     }
-    const post = c.mediaId ? await store.get("posts/" + c.mediaId, { type: "json" }) : null;
+    const saved = c.mediaId ? await store.get("posts/" + c.mediaId, { type: "json" }) : null;
+    const post = refreshPost(saved, saved ? await currentCatalog() : null);
     const text = buildMessage({ username: c.username, post, whatsapp: cfg.whatsapp });
     try {
       if (!cfg.accessToken || !cfg.igUserId) throw new Error("Falta la llave de acceso de Instagram.");
