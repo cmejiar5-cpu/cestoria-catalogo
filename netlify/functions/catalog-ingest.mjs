@@ -126,7 +126,8 @@ export default async function handler(request, context) {
     if (!title) return json(400, { error: "Falta el nombre del producto." });
     if (!image && !imageSaved && body.imageData) {
       imageSaved = true;
-      image = await saveImage(body.imageData, context, new URL(request.url).origin);
+      try { image = await saveImage(body.imageData, context, new URL(request.url).origin); } catch (e) { console.error("No se pudo guardar la foto", e); image = ""; }
+      if (!/^https:\/\//.test(image)) image = ""; // sin foto válida el producto igual se registra
     }
     const draft = JSON.parse(JSON.stringify(current));
     draft.categories = draft.categories || [];
