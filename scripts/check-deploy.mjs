@@ -7,7 +7,7 @@ const home = await get("/"); assert.equal(home.status, 200);
 console.log("    franja catálogo:", (await home.text()).includes("Catálogo independiente"));
 const adm = await get("/admin.html"); assert.equal(adm.status, 200);
 const admTxt = await adm.text();
-console.log("    franja administrador:", admTxt.includes("Administrador del catálogo independiente"), "| ocultar asociadas:", admTxt.includes("igDoneBtn"));
+console.log("    franja administrador:", admTxt.includes("Administrador del catálogo independiente"), "| ocultar asociadas:", admTxt.includes("igDoneBtn"), "| buscadores:", admTxt.includes("igPostSearch") && admTxt.includes("data-ig-q"));
 assert.equal((await get("/icons/icon.svg")).status, 200);
 assert.equal((await get("/cestoria_data.json")).status, 200);
 for (const hidden of ["/node_modules/@netlify/blobs/package.json", "/netlify/functions/catalog.mjs", "/package.json", "/scripts/build.mjs"]) {

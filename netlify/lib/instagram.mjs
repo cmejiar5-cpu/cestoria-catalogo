@@ -81,8 +81,8 @@ export function buildMessage({ username, post, whatsapp }) {
   const hola = "¡Hola" + (username ? " @" + username : "") + "! 😊 Gracias por tu comentario.";
   const wa = whatsapp || DEFAULT_WHATSAPP;
   if (post?.url) {
-    return hola + "\n\nAquí tienes el producto que viste:\n" + post.title + "\n" + post.url +
-      "\n\n¿Tienes dudas o quieres pedirlo? Escríbenos por WhatsApp: " + wa;
+    return hola + "\n\nAquí tienes " + (post.kind === "ally" ? "el contenido" : "el producto") + " que viste:\n" + post.title + "\n" + post.url +
+      "\n\n" + (post.kind === "ally" ? "¿Quieres conocer nuestros juguetes? Escríbenos por WhatsApp: " : "¿Tienes dudas o quieres pedirlo? Escríbenos por WhatsApp: ") + wa;
   }
   return hola + "\n\nAquí tienes nuestro catálogo: " + CATALOG_BASE +
     "\n\n¿Buscas algo en especial? Escríbenos por WhatsApp: " + wa;
@@ -106,7 +106,17 @@ async function graph(path, { method = "GET", token, body } = {}) {
 
 export const igApi = {
   me: token => graph("/me?fields=user_id,username", { token }),
-  media: token => graph("/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=30", { token }),
+  // Todas las publicaciones, página a página (hasta 1.000).
+  media: async token => {
+    const all = []; let after = "";
+    for (let page = 0; page < 20; page++) {
+      const r = await graph("/me/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=50" + (after ? "&after=" + encodeURIComponent(after) : ""), { token });
+      all.push(...(r.data || []));
+      after = r.paging?.cursors?.after || "";
+      if (!r.paging?.next || !after) break;
+    }
+    return { data: all };
+  },
   subscribe: token => graph("/me/subscribed_apps?subscribed_fields=comments", { method: "POST", token }),
   subscriptions: token => graph("/me/subscribed_apps", { token }),
   privateReply: (token, igUserId, commentId, text) =>

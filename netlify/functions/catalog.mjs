@@ -9,7 +9,7 @@ const KEY = "publicado";
 const HISTORY_PREFIX = "historial/";
 const HISTORY_KEEP = 20;
 const MAX_BODY = 2_000_000;
-const TYPES = ["AMAZON_PRODUCT", "CLASSIC", "COMMERCE_PRODUCT"];
+const TYPES = ["AMAZON_PRODUCT", "CLASSIC", "COMMERCE_PRODUCT", "ALLY_CONTENT"];
 
 let storeFactory = name => getStore({ name, consistency: "strong" });
 export function __setStoreFactoryForTests(fn) { storeFactory = fn; }

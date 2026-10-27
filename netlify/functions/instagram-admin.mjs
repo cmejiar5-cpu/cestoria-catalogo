@@ -71,7 +71,7 @@ export default async function handler(request, context) {
         const p = body.product || {};
         const title = str(p.title, 200), url = https(p.url);
         if (!title || !url) return json(400, { error: "Elige un producto con nombre y enlace." });
-        await store.setJSON("posts/" + mediaId, { productId: str(p.id, 80), title, url, image: https(p.image), permalink: https(body.permalink), updatedAt: new Date().toISOString() });
+        await store.setJSON("posts/" + mediaId, { productId: str(p.id, 80), kind: p.kind === "ally" ? "ally" : "product", title, url, image: https(p.image), permalink: https(body.permalink), updatedAt: new Date().toISOString() });
         return json(200, { ok: true });
       }
       case "refresh-token": {
