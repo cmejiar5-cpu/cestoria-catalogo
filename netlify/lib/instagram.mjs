@@ -105,7 +105,7 @@ export function buildMessage({ username, post }) {
     if (post.kind === "ally") return hola + "\n\nAquí tienes el contenido que viste:\n" + post.title + "\n" + post.url;
     const inCatalog = post.url.startsWith(CATALOG_BASE);
     return hola + "\n\nAquí tienes el producto que viste:\n" + post.title + "\n" + post.url +
-      "\n\n" + (inCatalog ? "Ahí puedes comprarlo o tocar «Pedir por WhatsApp» si tienes dudas. 💬" : "Ahí puedes hacer tu pedido. 💬");
+      "\n\n" + (inCatalog ? "Ahí lo puedes ver y, si tienes preguntas, tocar «Más información por WhatsApp». 💬" : "Ahí puedes hacer tu pedido. 💬");
   }
   return hola + "\n\nAquí tienes nuestro catálogo: " + CATALOG_BASE +
     "\n\nAhí encuentras todos los productos y el botón para escribirnos por WhatsApp. 💬";
