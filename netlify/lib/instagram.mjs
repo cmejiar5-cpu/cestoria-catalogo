@@ -34,10 +34,13 @@ export function catalogStore(context) {
 // si se cambió el nombre, sale el nombre nuevo; si se borró, se envía el catálogo.
 // Los productos de cestoria.shop no están en este catálogo y se usan tal como se guardaron.
 export function refreshPost(post, catalog) {
-  if (!post || !post.productId || !/[?&]p=/.test(post.url || "") || !catalog) return post;
+  if (!post || !post.productId || !/[?&]p=|\/p\//.test(post.url || "") || !catalog) return post;
   for (const c of catalog.categories || []) for (const it of c.items || []) {
     if (String(it.id) === String(post.productId)) {
-      return { ...post, title: it.title || post.title, kind: it.type === "ALLY_CONTENT" ? "ally" : (post.kind || "product") };
+      // /p/<id> entrega a Instagram la foto y el nombre del producto para la tarjeta del mensaje.
+      let url = post.url;
+      try { url = new URL(post.url).origin + "/p/" + encodeURIComponent(it.id); } catch {}
+      return { ...post, url, title: it.title || post.title, kind: it.type === "ALLY_CONTENT" ? "ally" : (post.kind || "product") };
     }
   }
   return null;

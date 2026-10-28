@@ -127,7 +127,7 @@ stores.catalogo = new Map([["publicado", JSON.stringify({ categories: [{ name: "
 r = await hook(comment("c20", "u20", "18000000000000010"));
 assert.equal(r.data.results[0].result, "enviado");
 let txt = JSON.parse(calls.at(-1).init.body).message.text;
-assert.match(txt, /Numberblocks del 6 al 10\nhttps:\/\/catalogo\.test\/\?p=603392334/); assert.doesNotMatch(txt, /www\.amazon\.com/);
+assert.match(txt, /Numberblocks del 6 al 10\nhttps:\/\/catalogo\.test\/p\/603392334/); assert.doesNotMatch(txt, /www\.amazon\.com/);
 // Producto borrado del catálogo -> envía el catálogo completo, no un enlace roto
 stores.catalogo = new Map([["publicado", JSON.stringify({ categories: [{ name: "Stem", items: [] }] })]]);
 r = await hook(comment("c21", "u21", "18000000000000010"));
