@@ -106,7 +106,7 @@ export function buildMessage({ username, post }) {
   const hola = "¡Hola" + (username ? " @" + username : "") + "! 😊 Gracias por tu comentario.";
   if (post?.url) {
     if (post.kind === "ally") return hola + "\n\nAquí tienes el contenido que viste:\n" + post.title + "\n" + post.url;
-    const inCatalog = post.url.startsWith(CATALOG_BASE);
+    const inCatalog = !/\/t\//.test(post.url) && !/cestoria\.shop\//.test(post.url);
     return hola + "\n\nAquí tienes el producto que viste:\n" + post.title + "\n" + post.url +
       "\n\n" + (inCatalog ? "Ahí lo puedes ver y, si tienes preguntas, tocar «Más información por WhatsApp». 💬" : "Ahí puedes hacer tu pedido. 💬");
   }

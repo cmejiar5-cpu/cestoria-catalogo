@@ -138,7 +138,7 @@ const n = calls.length;
 await hook("k2", "18100000000000001");
 check(!calls.slice(n).some(c => /fields=caption/.test(c)), "el segundo comentario ya no consulta el texto");
 await hook("k3", "18100000000000002");
-check(/Mesa Educativa con Proyector\nhttps:\/\/cestoria\.shop\/producto\/mesa-proyector/.test(calls.at(-1)), "Ref. T1 -> producto de la tienda");
+check(/Mesa Educativa con Proyector\nhttps:\/\/catalogo\.test\/t\/T1\n/.test(calls.at(-1)), "Ref. T1 -> enlace corto /t/T1: " + calls.at(-1));
 await hook("k4", "18100000000000003");
 check(/nuestro catálogo/.test(calls.at(-1)) && !stores.instagram.has("posts/18100000000000003"), "código que no existe -> catálogo, sin asociar");
 await hook("k5", "18100000000000004");
@@ -156,5 +156,16 @@ check(html.includes('location.replace("https://catalogo.test/?p=' + nid + '")') 
 pr = await productPage(new Request("https://catalogo.test/p/no-existe"), { ...prod, params: { id: "no-existe" } });
 check(pr.status === 302 && pr.headers.get("location") === "https://catalogo.test/", "producto que no existe -> catálogo");
 check(!productHtml({ id: "x", title: '"><script>alert(1)</script>', image: "javascript:x" }, "https://c.test").includes("<script>alert"), "el nombre no puede inyectar código");
+
+// 8. /t/: enlace corto hacia la tienda
+const storeLink = (await import("../netlify/functions/store-link.mjs")).default;
+let tl = await storeLink(new Request("https://catalogo.test/t/T1"), { ...prod, params: { key: "T1" } });
+check(tl.status === 302 && tl.headers.get("location") === "https://cestoria.shop/producto/mesa-proyector", "/t/T1 -> página del producto en la tienda");
+tl = await storeLink(new Request("https://catalogo.test/t/tensiometro"), { ...prod, params: { key: "tensiometro" } });
+check(tl.headers.get("location") === "https://cestoria.shop/producto/tensiometro", "/t/<slug> -> tienda");
+tl = await storeLink(new Request("https://catalogo.test/t/T99"), { ...prod, params: { key: "T99" } });
+check(tl.headers.get("location") === "https://catalogo.test/", "código desconocido -> catálogo");
+tl = await storeLink(new Request("https://catalogo.test/t/x"), { ...prod, params: { key: "https://malo.com" } });
+check(tl.headers.get("location") === "https://catalogo.test/", "no redirige a otros sitios");
 
 console.log("OK: códigos de referencia, " + ok + " comprobaciones superadas");

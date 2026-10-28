@@ -3,7 +3,15 @@
 //   GET  /instagram-webhook  -> verificación de Meta (hub.challenge)
 //   POST /instagram-webhook  -> avisos firmados con X-Hub-Signature-256
 import { igStore, catalogStore, refreshPost, getConfig, validSignature, extractComments, buildMessage, igApi, addLog, json } from "../lib/instagram.mjs";
-import { findRefInText, resolveRef, STORE_REFS_KEY } from "../lib/refs.mjs";
+import { findRefInText, resolveRef, storeSlugFromUrl, STORE_REFS_KEY } from "../lib/refs.mjs";
+
+// Productos de la tienda: enlace corto del catálogo (/t/T3 o /t/<slug>) que redirige a cestoria.shop.
+// Instagram resalta mejor los enlaces cortos de este dominio.
+export function shortStoreLink(post, origin) {
+  const slug = post?.url ? storeSlugFromUrl(post.url) : "";
+  if (!slug) return post;
+  return { ...post, url: origin + "/t/" + (/^T\d+$/.test(post.ref || "") ? post.ref : encodeURIComponent(slug)) };
+}
 
 // Publicación sin producto asociado: si su texto trae «Ref. C27» (lo pone la app Creativos),
 // se asocia sola y queda guardada como si se hubiera elegido en el administrador.
@@ -62,7 +70,7 @@ export default async function handler(request, context) {
     let saved = c.mediaId ? await store.get("posts/" + c.mediaId, { type: "json" }) : null;
     let auto = null;
     if (!saved) { auto = await matchByRef(store, cfg, c.mediaId, currentCatalog, context); saved = auto?.post || null; }
-    const post = refreshPost(saved, saved ? await currentCatalog() : null);
+    const post = shortStoreLink(refreshPost(saved, saved ? await currentCatalog() : null), new URL(request.url).origin);
     const text = buildMessage({ username: c.username, post, whatsapp: cfg.whatsapp });
     try {
       if (!cfg.accessToken || !cfg.igUserId) throw new Error("Falta la llave de acceso de Instagram.");

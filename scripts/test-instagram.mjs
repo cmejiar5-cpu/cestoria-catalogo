@@ -88,7 +88,7 @@ const sent = calls.at(-1);
 assert.match(sent.url, /\/17841424417134943\/messages$/);
 const msg = JSON.parse(sent.init.body);
 assert.deepEqual(msg.recipient, { comment_id: "c1" });
-assert.match(msg.message.text, /@maria\.p/); assert.match(msg.message.text, /Tensiómetro de muñeca\nhttps:\/\/cestoria\.shop\/producto\/tensiometro/);
+assert.match(msg.message.text, /@maria\.p/); assert.match(msg.message.text, /Tensiómetro de muñeca\nhttps:\/\/catalogo\.test\/t\/tensiometro\n/, "tienda: enlace corto del catálogo"); assert.match(msg.message.text, /hacer tu pedido/);
 assert.equal((msg.message.text.match(/https:\/\//g) || []).length, 1, "un solo enlace: Instagram abre siempre el primero");
 // 9. Aviso repetido de Meta -> no duplica
 assert.equal((await hook(comment("c1", "u1", "18000000000000001"))).data.results[0].result, "repetido");
