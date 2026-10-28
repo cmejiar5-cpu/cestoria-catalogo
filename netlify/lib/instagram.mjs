@@ -96,15 +96,19 @@ export function extractComments(body) {
   return out;
 }
 
-export function buildMessage({ username, post, whatsapp }) {
+// Un solo enlace por mensaje: Instagram junta todo en una burbuja con la vista previa del
+// primer enlace, así que un segundo enlace (WhatsApp) terminaba abriendo el primero.
+// El botón de WhatsApp está en la página del producto del catálogo.
+export function buildMessage({ username, post }) {
   const hola = "¡Hola" + (username ? " @" + username : "") + "! 😊 Gracias por tu comentario.";
-  const wa = whatsapp || DEFAULT_WHATSAPP;
   if (post?.url) {
-    return hola + "\n\nAquí tienes " + (post.kind === "ally" ? "el contenido" : "el producto") + " que viste:\n" + post.title + "\n" + post.url +
-      "\n\n" + (post.kind === "ally" ? "¿Quieres conocer nuestros juguetes? Escríbenos por WhatsApp: " : "¿Tienes dudas o quieres pedirlo? Escríbenos por WhatsApp: ") + wa;
+    if (post.kind === "ally") return hola + "\n\nAquí tienes el contenido que viste:\n" + post.title + "\n" + post.url;
+    const inCatalog = post.url.startsWith(CATALOG_BASE);
+    return hola + "\n\nAquí tienes el producto que viste:\n" + post.title + "\n" + post.url +
+      "\n\n" + (inCatalog ? "Ahí lo puedes ver y, si tienes preguntas, tocar «Más información por WhatsApp». 💬" : "Ahí puedes hacer tu pedido. 💬");
   }
   return hola + "\n\nAquí tienes nuestro catálogo: " + CATALOG_BASE +
-    "\n\n¿Buscas algo en especial? Escríbenos por WhatsApp: " + wa;
+    "\n\nAhí encuentras todos los productos y el botón para escribirnos por WhatsApp. 💬";
 }
 
 async function graph(path, { method = "GET", token, body } = {}) {
