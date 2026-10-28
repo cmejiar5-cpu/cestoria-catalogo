@@ -131,19 +131,41 @@ const hook = async (cid, media, from = "u" + cid) => {
   return (await webhook(new Request("https://catalogo.test/instagram-webhook", { method: "POST", headers: { "x-hub-signature-256": sig }, body: raw }), prod)).json();
 };
 await hook("k1", "18100000000000001");
-check(/Numberblocks figuras\nhttps:\/\/catalogo-cestoriashop-git\.netlify\.app\/\?p=/.test(calls.at(-1)), "Ref. C10 -> mensaje con el producto: " + calls.at(-1));
+check(/Numberblocks figuras\nhttps:\/\/catalogo-cestoriashop-git\.netlify\.app\/p\/creativos-/.test(calls.at(-1)), "Ref. C10 -> mensaje con el producto: " + calls.at(-1));
 const saved = JSON.parse(stores.instagram.get("posts/18100000000000001").v);
 check(saved.auto === true && saved.ref === "C10" && saved.permalink.includes("instagram.com"), "queda guardada la asociación (se ve en el administrador)");
 const n = calls.length;
 await hook("k2", "18100000000000001");
 check(!calls.slice(n).some(c => /fields=caption/.test(c)), "el segundo comentario ya no consulta el texto");
 await hook("k3", "18100000000000002");
-check(/Mesa Educativa con Proyector\nhttps:\/\/cestoria\.shop\/producto\/mesa-proyector/.test(calls.at(-1)), "Ref. T1 -> producto de la tienda");
+check(/Mesa Educativa con Proyector\nhttps:\/\/catalogo\.test\/t\/T1\n/.test(calls.at(-1)), "Ref. T1 -> enlace corto /t/T1: " + calls.at(-1));
 await hook("k4", "18100000000000003");
 check(/nuestro catálogo/.test(calls.at(-1)) && !stores.instagram.has("posts/18100000000000003"), "código que no existe -> catálogo, sin asociar");
 await hook("k5", "18100000000000004");
 check(/nuestro catálogo/.test(calls.at(-1)), "sin código -> catálogo, como antes");
 const log = [...stores.instagram.keys()].filter(k => k.startsWith("log/")).map(k => JSON.parse(stores.instagram.get(k).v).result).join(" | ");
 check(/asociado solo por Ref\. C10/.test(log) && /Ref\. C999 no existe/.test(log), "el registro explica qué pasó: " + log);
+
+// 7. /p/<id>: tarjeta de Instagram con foto y nombre, y paso directo a la ficha
+const { default: productPage, productHtml } = await import("../netlify/functions/product-page.mjs");
+const nid = nov.items[0].id;
+let pr = await productPage(new Request("https://catalogo.test/p/" + nid), { ...prod, params: { id: nid } });
+let html = await pr.text();
+check(pr.status === 200 && /og:title" content="Numberblocks figuras \| Cestoria"/.test(html) && /og:image" content="https:\/\/catalogo\.test\/img\//.test(html), "la página corta trae nombre y foto para Instagram: " + html.slice(0, 400));
+check(html.includes('location.replace("https://catalogo.test/?p=' + nid + '")') && /http-equiv="refresh"/.test(html), "la página corta lleva a la ficha del producto");
+pr = await productPage(new Request("https://catalogo.test/p/no-existe"), { ...prod, params: { id: "no-existe" } });
+check(pr.status === 302 && pr.headers.get("location") === "https://catalogo.test/", "producto que no existe -> catálogo");
+check(!productHtml({ id: "x", title: '"><script>alert(1)</script>', image: "javascript:x" }, "https://c.test").includes("<script>alert"), "el nombre no puede inyectar código");
+
+// 8. /t/: enlace corto hacia la tienda
+const storeLink = (await import("../netlify/functions/store-link.mjs")).default;
+let tl = await storeLink(new Request("https://catalogo.test/t/T1"), { ...prod, params: { key: "T1" } });
+check(tl.status === 302 && tl.headers.get("location") === "https://cestoria.shop/producto/mesa-proyector", "/t/T1 -> página del producto en la tienda");
+tl = await storeLink(new Request("https://catalogo.test/t/tensiometro"), { ...prod, params: { key: "tensiometro" } });
+check(tl.headers.get("location") === "https://cestoria.shop/producto/tensiometro", "/t/<slug> -> tienda");
+tl = await storeLink(new Request("https://catalogo.test/t/T99"), { ...prod, params: { key: "T99" } });
+check(tl.headers.get("location") === "https://catalogo.test/", "código desconocido -> catálogo");
+tl = await storeLink(new Request("https://catalogo.test/t/x"), { ...prod, params: { key: "https://malo.com" } });
+check(tl.headers.get("location") === "https://catalogo.test/", "no redirige a otros sitios");
 
 console.log("OK: códigos de referencia, " + ok + " comprobaciones superadas");
